@@ -26,7 +26,7 @@
 
    值类型，两个变量的存取不会产生影响，存储在栈区
 
-2. 对象的存储存放在堆区，通过引用，两个相互赋值的值会相互影响
+2. 对象的存储存放在堆区或栈区，通过引用，两个相互赋值的值会相互影响
 
 ```javascript
 /**************基本数据类型和引用类型的区别*****************/
@@ -82,6 +82,7 @@
 ## 4、包装对象
 
 ```javascript
+/*装箱：*/
 // var str = new String('mxy');
 var str1 = 'mxy';
 str1.substr(0,2);
@@ -91,3 +92,124 @@ var strObject = new String(str1);
 strObject.substr(0,2);
 ```
 
+# 三、基本（原始）数据类型进阶
+
+## 3.1、Number进阶
+
+3.1.1、装箱过程
+
+​	基本数据类型，在操作过程中，会有自动装箱过程，生成临时对象，临时对象会在使用完成后自动释放。
+
+​	注：访问对象属性时，首先访问自身属性，访问不到时则会在原型链上寻找对应的属性和方法。
+
+3.1.2、Number原型方法，构造器属性
+
+```javascript
+			/*Number进阶*/
+			var num = 10;
+			num.toString();
+
+			var num = 10;
+			var numObject = new Number(num);
+			numObject.toString();
+			num.p = 10;
+			var t=num.p;
+			console.log(t);//undefinded
+
+			//toFixed(x):保留记x位小数
+			var num1 = 11.29;
+			var numobj2 = new Number(num1);
+			console.log(numobj2);
+			num1.toFixed(1);//11.29
+			//toPrecision(x):转换为指数
+			var n1 = 12345.6789;
+			console.log(n1.toPrecision(2));
+			//toString():转换为字符串
+//Number构造器属性（静态属性）
+Number.MAX_VALUE
+Number.MIN_VALUE
+Number.NaN
+Number.NEGATIVE_INFINITY
+Number.POSITIVE_INFINITY
+
+//Number原型方法(Number对象继承的方法）
+
+//Number._proto_  :所有的方法都构造在他之上
+
+// Number.prototype.toFixed();
+// Number.prototype.toPrecision();
+// Number.prototype.toString();
+// Number.prototype.toExponential();
+
+			//基本数据类型的__proto__属属性
+			// ==（和）
+			//变量构造函数的prototype是相等的
+			var n = 20;
+			console.log(n.__proto__);
+			console.log(n.prototype);
+```
+
+## 3.2、String进阶
+
+3.2.1、字符串比较
+
+```javascript
+//A.localeCompare(B):字符串比较
+'b'.localeCompare('a')//1
+```
+
+3.2.2、字符串拼接
+
+- 合并：加号运算法（+、+=）
+- 合并：拼接字符串数组（通过数组方法push，join等）
+
+3..2.3、字符串构造器方法
+
+```javascript
+//String.fromCharCode(97,98,99)：将数字转换为字符
+String.fromCharCode(97,98,99);//"abc"
+String.fromCharCode.apply(null,[97,98,99]);//"abc"
+```
+
+3.2.4、字符串原型方法之提取字符串
+
+```javascript
+var str1 = "abcdjhfe";
+//str.charAT(index)：返回特定索引位置的字符
+console.log(str1.charAT位置的字符的Unicode码(3));//d
+//str.charCodeAt(index):返回特定索引
+console.log(str1.charCodeAt(3));
+//slice(起始位置，截止位置)：截取
+console.log(str1.slice(0,3));
+str1.slice(1,-1)
+//substr(截取的起始位置,截取字符串的长度):
+str1.substr(0,3);
+str1.substr(0,-1);//""
+//substring(截取起始位置，截取截止位置):截止位置可不写
+//如果sunstring起始位置>结束位置会自动交换位置substring(3,0)
+//substring(0,-1)和slice(0,-1)是不一样的
+//如果超出索引范围自动截断substring(-1,3)
+str1.substring(0,3);
+//split(特定的字符,(长度)):以特定的字符分割成数组,长度可选可不选
+var str2 ="a*c*g/h*f";
+str2.split("*");
+str2.split("*",2);
+```
+
+3.2.5、字符串原型方法之字符串变换
+
+```javascript
+var ss = "     abc  d     "
+//trim():去除字符串两边的空格，字符串内部的空格不去除
+ss.trim();//"abc  d"
+//concat(str1,str2):将字符串拼接起来
+var str3 = "hello ";
+str3.concat("world");//"hello world"
+//
+```
+
+3.2.6、字符串原型方法之检索和比较
+
+3.2.7、字符串原型方法之可正则方法
+
+## 3.3、Boolean进阶
