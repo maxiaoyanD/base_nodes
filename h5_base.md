@@ -224,6 +224,36 @@
 
 ​	datalist元素—为输入框提高可选的列表
 
-3.3、新增表单属性
+3.2.2、output元素
 
-3.4、
+​	output元素用于在浏览器中显示计算结果或脚本输出。
+
+| 属性 | 值   |      |
+| ---- | ---- | ---- |
+| for  |      |      |
+| form |      |      |
+| name |      |      |
+
+## 3.3、新增表单属性
+
+3.3.1、form属性
+
+​	form属性规定输入域所属的一个或多个表单，属性值为所属表单是id
+
+3.3.2formaction、formmethod属性
+
+#### 3.3.3、required、placeholder属性
+
+3.3.4、list属性
+
+3.3.5、autofocus属性、
+
+# 4、地理位置定位
+
+## 4.1、HTML5获取当前地理位置
+
+4.1.1、getCurrentPosition(onSuccess,onError,options)
+
+
+
+## 4.2、地理位置定位示例
