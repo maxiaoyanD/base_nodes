@@ -284,6 +284,32 @@ console.log(y);
 
 ## 5.3、JS关系运算符
 
+​	**== 和 ===的区别**
+
+==：如果类型不同，先转换再比较（引用类型转换成数据类型）
+
+===：类型不同为false，若类型相同再判断
+
+```javascript
+console.log(3==new String(3));//true
+console.log(3===new String(3));//false
+
+//下列中的false，
+/**需要好好思考 **/
+var obj1 = new String("xyz");
+var obj2 = new String("xyz");
+console.log("xyz" === obj1);//false,类型不同
+console.log(obj1 == obj2);//false
+console.log(obj1 === obj2);//false
+console.log(obj1 == new String("xyz"));//false
+
+
+console.log(NaN === NaN); //false
+console.log({} === {});//false
+```
+
+
+
 # 6、JS逻辑运算符进阶
 
 ## 6.1、&&与||的基本理解应用
