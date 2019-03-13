@@ -210,11 +210,23 @@ str3.concat("world");//"hello world"
 
 3.2.6、字符串原型方法之检索和比较
 
+```javascript
+/*********字符串原型方法之检索和比较***********/
+//str.indexOf(stringValue):返回查找字在被查找字符串中初次出现的位置，如果不存在则返回-1
+var str4="你好吗好好";
+var str5="哈哈哈哈或 '你好吗好好'很啦"
+str4.indexOf("好");//1
+//str.lastIndexOf(stringValue):返回最后出现的位置，如果不存在返回-1
+str4.lastIndexOf("好");//4
+//"a".localeCompare('b'):判断a是否在b之前，如果是返回整数，不是返回负数
+str4.localeCompare('啦');
+```
+
 3.2.7、字符串原型方法之可正则方法
 
 ## 3.3、Boolean进阶
 
-3.3.1、所有对象都是真值
+**所有对象都是真值**
 
 # 4、JS语法、表达式及语句
 
