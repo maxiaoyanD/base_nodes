@@ -28,6 +28,8 @@
 
 2. 对象的存储存放在堆区或栈区，通过引用，两个相互赋值的值会相互影响
 
+   **？？栈区存引用，堆区存内容？？**
+
 ```javascript
 /**************基本数据类型和引用类型的区别*****************/
 /*一、赋值时不同*/
@@ -228,7 +230,7 @@ str4.localeCompare('啦');
 
 **所有对象都是真值**
 
-# 4、JS语法、表达式及语句
+# 四、JS语法、表达式及语句
 
 4.1、JS语法、表达式及语句综述
 
@@ -238,7 +240,7 @@ str4.localeCompare('啦');
 
 4.1.3、表达式与语句
 
-# 5、JS赋值、算数、关系运算符
+# 五、JS赋值、算数、关系运算符
 
 ## 5.1、JS赋值运算符
 
@@ -322,7 +324,7 @@ console.log({} === {});//false
 
 
 
-# 6、JS逻辑运算符进阶
+# 六、JS逻辑运算符进阶
 
 ## 6.1、&&与||的基本理解应用
 
@@ -410,4 +412,64 @@ console.log(sum(1));
 console.log(sum(1,0,0));
 // ==> 1 + 0 + 0 ==> 1
 ```
+
+# 七、JS函数及函数参数
+
+## 7.1、函数的定义与调用
+
+7.1.1、函数的定义方式（3）
+
+7.1.2、函数的调用方法（4）
+
+作为
+
+```javascript
+//四种调用方式
+//1-作为函数直接调用
+    //（非严格模式下this为全局对象，严格模式下为undefined） 
+    function test(){
+        console.log(this);
+    }
+    test();//这里的this指的是window
+
+
+//2-作为方法调用（this为调用方法的对象）
+    var obj ={
+        x:0,
+        test:function(){
+            console.log(this.x);
+        }
+    };
+    obj.test();//0
+
+
+//3-通过call()和aplly()间接调用
+    //(this为函数对象的call/apply方法的首个参数，移花接木)
+    objA = {"name":"AA"};
+    objB = {"name":"BB"};
+    objA.foo = function(){
+        console.log(this.name);
+    }
+    objA.foo();//AA
+    //方法名.call()可以切换调用的对象
+    objA.foo.call(objB);//BB
+    objA.foo.apply(objB);//BB
+
+//4-作为构造函数调用（this指向实例化对象）
+    //构造函数的函数名要大写
+    function Person(name){
+        this.name = name;
+    }
+    Person.prototype.sayHi = function(){
+        console.log("hi" + this.name);
+    }
+    var person = new Person("mamama");
+    person.sayHi();
+    console.log(person.__proto__ === Person.prototype);
+
+```
+
+7.2、函数参数的数量问题
+
+7.3、参数类型与传递方式（值、引用）
 
