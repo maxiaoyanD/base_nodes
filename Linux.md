@@ -18,6 +18,38 @@ sudo：可以获取用户权限
 
 
 
+sudo mkdir /phy_share/leonard
+
+sudo mkdir /phy_share/sheldon
+
+ll /phy_share/
+
+sudo chown leonard:physics /phy_share
+
+
+
+
+
+3.sudo 
+
+
+
+
+
+
+
+nano
+
+配置：sudo nano /etc/nanorc
+
+
+
+
+
+
+
+
+
 
 
 

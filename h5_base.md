@@ -86,28 +86,50 @@
 
  - 属性：
 
-   |      |      |      |
-   | ---- | ---- | ---- |
-   |      |      |      |
-   |      |      |      |
-   |      |      |      |
-   |      |      |      |
+   | 属性   | 值   | 描述                     |
+   | ------ | ---- | ------------------------ |
+   | src    | url  | 嵌入内容的 URL。必选属性 |
+   | type   | type | 定义嵌入内容的类型       |
+   | width  | px   | 设置宽度                 |
+   | height | px   | 设置高度                 |
 
 #### （3）time
 
    ​	定义公历时间（24小时制）或日期
 
+该元素能够以机器可读的方式对日期和时间进行编码，搜索引擎也能够生成更智能的搜索结果。
+
 ####  （4）details
 
    ​	标签用于描述文档或文档某个部分的细节。（demo2-5）
+
+与 <summary>标签配合使用可以为details定义标题。标题是可见的，用户点击标题时，会显示出details。	
+
+```html
+<details>
+	<summary> Copyright 2018.</summary>
+	<p>版权归H5方向所有</p>
+</details>
+```
 
 ####  （5）mark
 
    ​	标签定义带有记号的文本
 
+```html
+<p>每天都要吃<mark>早餐</mark></p>
+```
+
 ####  （6）progress
 
    ​	标签标示任务的进度（进程）
+
+| 属性  | 值     |                      |
+| ----- | ------ | -------------------- |
+| max   | number | 规定一共需要多少工作 |
+| value | number | 规定已经完成多少任务 |
+
+
 
 ### 2.3.2、插入音频、视频示例
 
@@ -196,7 +218,7 @@
 
 ### 3.1.3、url输入文本框-url
 
-​	注：
+​	注：专门用来输入url地址。当表单在提交前，会自动校验是否符合url网址的规范。
 
 ### 3.1.4、电话号码输入文本框-tel
 
@@ -204,11 +226,15 @@
 
 ### 3.1.5、滑动条文本框-range
 
-​	注：
+```html
+<input type="range" min="0" max="50" step="5" name="redom" value = "0"/>
+```
+
+​	注：用于应该包含一定范围内数字值的输入域。range类型显示为滑动条。能够设定对所接受的数字的限定。
 
 ### 3.1.6、日期时间输入文本框-date
 
-​	注：date类型的input元素以日历的形式方便用户输入。还有其他的type：time、datetime-local、month、week、datetime
+​	注：date类型的input元素以日历的形式方便用户输入。还有其他的**type：time、datetime-local、month、week、datetime**
 
 ### 3.1.7、颜色选择文本框-color
 
@@ -220,33 +246,98 @@
 
 ## 3.2、新增表单元素
 
-3.2.1、datalist元素
+### 3.2.1、datalist元素
 
 ​	datalist元素—为输入框提高可选的列表
 
-3.2.2、output元素
+一般和<input>标签配合使用，来设置<input>可能的值。把datalist绑定到输入域，需要将输入域list属性引用datalist的ID。列表通过datalist中的option元素创建。如不从列表中选择某项，也可自行输入其他内容。每个option元素必须设置value属性。
+
+```html
+<form action="" method="get">
+    <!-- id值要和input中list的值相同才能关联 -->
+		exo中的成员：
+    <input type="search" name="sousuo" list="member">
+		<datalist id="member">
+			<select>
+				<option >xiumin</option>
+				<option >sohu</option>
+				<option >lay</option>
+				<option >bakeyuab</option>
+				<option> chen</option>
+				<option >pcy</option>
+				<option> D.O.</option>
+				<option >kai</option>
+				<option >sehun</option>
+			</select>
+		</datalist>
+	</form>
+```
+
+### 3.2.2、output元素
 
 ​	output元素用于在浏览器中显示计算结果或脚本输出。
 
-| 属性 | 值   |      |
-| ---- | ---- | ---- |
-| for  |      |      |
-| form |      |      |
-| name |      |      |
+```html
+<form oninput="x.value=parseInt(a.value)+parseInt(b.value)">
+		0<input type="range" id="a" value="50">100
+		<!-- 这是个滑竿 -->
+		+<input type="number" id="b" value="50">
+		=<output name="x" for="a b"></output>
+</form>
+```
+
+| 属性 | 值                    | 描述                             |
+| ---- | --------------------- | -------------------------------- |
+| for  | ID of another element | 定义输出域相关的一个或多个元素   |
+| form | form name             | 定义输入字段所属的一个或多个表单 |
+| name | unique name           | 定义对象的唯一名称               |
 
 ## 3.3、新增表单属性
 
-3.3.1、form属性
+### 3.3.1、form属性
 
 ​	form属性规定输入域所属的一个或多个表单，属性值为所属表单是id
 
-3.3.2formaction、formmethod属性
+​	可将表单内的从属元素写在页面的任意位置，然后为该元素指定form属性。如需引用多个表单，使用空格分隔的列表。
 
-#### 3.3.3、required、placeholder属性
+```html
+<!-- 其他表单的form属性与form元素的ID相等即可相互联系，提交到相同的后台 -->
+	<!-- action用于表示提交的后台 -->
+	<form id="testform" method="get" action="">
+		<!-- required属性用于校验是否填写东西 -->
+		姓&nbsp;&nbsp;名：<input type="text" name="name1" 
+		autofocus="autofocus" required placeholder="请输入姓名"/>
+		<input type="submit" value="提交"/>
+	</form>
+    <br/>
+        自我介绍：<textarea name="textarea1" form="testform"></textarea>
+```
 
-3.3.4、list属性
+### 3.3.2formaction、formmethod属性
 
-3.3.5、autofocus属性、
+​	formaction：实现将表单提交到不同的页面
+
+​	formmethod：对每个表单元素分别指定不同的提交方法
+
+### 3.3.3、required、placeholder属性
+
+​	required属性：布尔属性，规定输入域在提交之前必须填写
+
+​	placeholder属性：没有值时出现在文本框中的字符串，获取焦点输入框提示信息消失，以柔和的灰色文本显示在域中。
+
+### 3.3.4、list属性
+
+​	input元素的list属性与datalist元素的ID属性绑定，提供列表输入选项。
+
+### 3.3.5、autofocus、multiple
+
+​	autofocus属性：布尔属性，页面加载时表单域自动聚焦；一个页面此属性仅可设置一次
+
+​	multiple属性：用于文件上传控制，设置此属性后，允许上传多个文件。
+
+​	max/min/step属性：设置最大/小值/数值或日期时间的增量。
+
+​	
 
 # 4、地理位置定位
 
@@ -275,4 +366,76 @@ text/cache-manifest。(主要用于告诉浏览器打开方式)
 5.1.2、在html标记中指定使用缓存文件
 
 5.2、JavaScript接口
+
+# 6、web存储
+
+## 6.1、存储简介
+
+​	Cookie：保存用户信息、用户设置、密码记忆
+
+## 6.2、LocalStorage
+
+​	将数据保存在客户端本地的硬件设备中，即使浏览器被关闭了，该数据仍然存在，**下次打开浏览器访问网站仍然可以继续使用。**
+
+​	localStorage为永久保存
+
+数据组织形式：
+
+- ​	存储是基于键/值对的形式存储，每个键值对称为一个项。存储和检索数据都是通过制定的键名。
+- ​        键名的类型是字符串类型
+- 值可以包括字符串、布尔值、数值在内的任意JavaScript类型
+
+```javascript
+//1、检查浏览器是否支持
+if(!window.localStorage){
+	alert("您浏览器不支持localStorage！");
+}else{
+	//主逻辑业务
+}
+```
+
+浏览器提供localStorage对象的操作：
+
+- 存储数据项：
+  - localStorage.setItem(key,value)
+  - localStorage["key"] = value
+  - localStorage.key = value
+- 读取数据项
+  - localStorage.getItem(key)
+  - localStorage["key"]
+  - localStorage.key
+- 清除数据项
+  - localStorage.removeItem(key)
+- 清除全部数据
+  - localStorage.clear()
+- 获得键名
+  - localStorage.key(index)
+- 获得数据项的个数
+  - localStorage.length
+
+存储数据的数据类型：
+
+​	仅能存储字符串类型的数据；对象转换为字符串（JSON API ---JSON.stringify()转换成字符串，JSON.parse()转换成对象）
+
+## 6.3、Session Storage
+
+​	将数据保存在session对象中。session是指用户在浏览某个网站时，从进入网站到浏览器关闭所经过的这段时间。session对象可以用来保存在这段时间内所要保存的任何数据。**当用户关闭浏览器窗口后，数据会被删除。**
+
+​	sessionStorage为临时保存
+
+sessionStorage对象方法
+
+- 保存数据：sessionStorage.setItem(key,value)
+- 读取数据：sessionStorage.getItem(key)
+- 获得键名：sessionStorage.key(index)
+- 移除数据：sessionStorage.removeItem(key)
+- 清除所有数据：sessionStorage.clear()
+
+## 6.4、网页访问计数器
+
+​	localStorage可以作为web应用访问计数器
+
+​	sessionStorage可以作为会话计数器
+
+# 7、数据通信
 
