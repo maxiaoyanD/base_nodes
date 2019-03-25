@@ -1,4 +1,4 @@
-# 一、HTML5简介
+一、HTML5简介
 
 ## 1.1、web标准
 
@@ -438,4 +438,293 @@ sessionStorage对象方法
 ​	sessionStorage可以作为会话计数器
 
 # 7、数据通信
+
+## 7.1、数据通信
+
+​	Web应用需要从服务器获取页面或数据，也需要和其他用户进行数据交换。这些都是Web中的数据通信。
+
+​	HTTP协议的缺陷：通信只能由客户端发起，服务器总是被动的
+
+​	Ajax轮询与长轮询的原理：
+
+ajax轮询：即让浏览器隔几秒就发送一次请求，询问服务器是否有新信息。
+
+长轮询：采取的是阻塞模型，即客户端发起连接后，如果没消息，就一直不返回Response给客户端，直到有消息才返回。返回完之后，客户端再次建立连接，周而复始。
+
+## 7.2、WebSocket
+
+​	WebSocket是HTML5提供的一种浏览器与服务器进行**全双工**通讯的**网络通讯协议。**
+
+​	特点：
+
+（1）建立在 TCP 协议之上，服务器端的实现比较容易。
+
+（2）与 HTTP 协议有着良好的兼容性。默认端口也是80和443，握手阶段采用 HTTP 协议，不容易屏蔽，能通过各种 HTTP 代理服务器。
+
+（3）数据格式比较轻量，性能开销小，通信高效。
+
+（4）可以发送文本，也可以发送二进制数据。
+
+（5）没有同源限制，客户端可以与任意服务器通信。
+
+（6）协议标识符是ws（如果加密，则为wss），服务器网址就是 URL。
+
+## 7.3、WebSocket客户端
+
+7.3.1、WebSocket构造函数
+
+```javascript
+var Socket  = new WebSocket(url,[protocol])
+//url:第一个参数指定连接的URL
+//protocol：第二个参数可选，指定了可接受的子协议
+var Socket = new WebSocket('ws://localhost:8080');
+```
+
+7.3.2、WebSocket属性
+
+| 属性                     | 描述                                                         |
+| ------------------------ | ------------------------------------------------------------ |
+| WebSocket.ready.State    | 返回实例对象的当前状态，共4种。                       connecting：值为0，表示正在连接                 open：值为1，表示连接成功，可以通信了closing：值为2，表示连接正在关闭               closed：值为3，表示连接已经关闭，或者打开连接失败。 |
+| WebSocket.bufferedAmount | 表示已被 send()放入正在队列中等待传输，但是还没有发出二进制数据。 |
+
+```javascript
+switch (ws.readyState) {
+      case WebSocket.CONNECTING:
+        // do something
+        break;
+      case WebSocket.OPEN:
+        // do something
+        break;
+      case WebSocket.CLOSING:
+        // do something
+        break;
+      case WebSocket.CLOSED:
+        // do something
+        break;
+      default:
+        // this never happens
+        break;
+}
+//实例对象的bufferedAmount属性可以用来判断发送是否结束
+ var socket = new WebSocket(url, [protocol] );
+ var data = new ArrayBuffer(10000000);
+ socket.send(data);
+ if (socket.bufferedAmount === 0) {
+      // 发送完毕
+ } 
+ else {
+      // 发送还没结束
+ }
+```
+
+7.3.3、WebSocket事件
+
+| 事件    | 事件处理程序        | 描述                       |
+| ------- | ------------------- | -------------------------- |
+| open    | WebSocket.onopen    | 连接建立时触发             |
+| message | WebSocket.onmessage | 客户端接收服务端数据时触发 |
+| error   | WebSoc.onerror      | 通信发生错误时触发         |
+| close   | WebSocket.onclose   | 连接关闭时触发             |
+
+​	window.WebSocket.onopen
+
+实例对象的onopen属性，用于指定连接成功后的回调函数。
+
+​	window.WebSocket.onmessage
+
+实例对象的onmessage属性，用于指定收到服务器数据后的回调函数。
+
+​	window.WebSocket.onclose
+
+实例对象的onclose属性，用于指定连接关闭后的回调函数。
+
+7.3.4、WebSocket方法
+
+| 方法              | 描述             |
+| ----------------- | ---------------- |
+| WebSocket.send()  | 使用连接发送数据 |
+| WebSocket.close() | 关闭连接         |
+
+​	window.WebSocket.send()
+
+实例对象的send()方法用于向服务器发送数据。
+
+​	window.WebSocket.close()
+
+实例对象的close()方法用于关闭连接。
+
+demo7-1.html
+
+![1553516382985](D:\大二下\base_nodes\%5CUsers%5Clenovo%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1553516382985.png)
+
+## 7.4、WebSocket服务端
+
+常用的Node实现以下三种：
+
+​	WebSockets；Socket.IO；WebSocket-Node
+
+使用WebSocket
+
+​	基于WebSocket实现用户和用户聊天
+
+​	提示：
+
+​	•在WebSocket服务器端，每个用户连接之后都创建一个connection对象。使用该对象向此用户发送数据。
+
+​	•要传输包含几项内容的数据时，可以使用JSON进行传输（JSON和字符串可以互相转换）
+
+# 8、文件
+
+## 8.1、file对象与filelist对象
+
+​	file对象：指用户选择的文件
+
+​	FileList对象：指用户选择的文件列表。
+
+​	每个文件都是file对象，FileList对象是file对象的列表，代表用户选择的所有文件。
+
+| 属性             | 描述                                                 |
+| ---------------- | ---------------------------------------------------- |
+| name             | 文件名，该属性只读                                   |
+| size             | 文件的大小，单位为字节，该属性只读                   |
+| type             | 文件的MIME类型，如果分辨不出类型，则为空字符串，只读 |
+| lastModified     | 文件的上次修改时间，格式为时间戳                     |
+| lastModifiedDate | 文件的上次修改时间，格式为Date对象实例。             |
+
+```html
+<body>
+//所有type属性为file的<input>元素都有一个files属性，用来存储用户所选择的文件。files 属性值就是 FileList 对象。
+//files有length属性和item方法。可以通过files[index]或者files.item(index)获取选择的file对象。
+//实例：使用FileList对象与file对象
+	<script>
+		function ShowFileName(){
+			var file;
+			var file1;
+			file1 = document.getElementById("file");
+			console.log(file1.files);
+			for(var i=0; i<file1.files.length; i++){
+				file = file1.files[i];
+				console.log(file);
+			}
+		}
+	</script>
+	<input type="file" id="file" multiple/>
+	<input type="button" value="文件上传" onclick="ShowFileName();"/>
+</body>
+```
+
+## 8.2、Blob对象
+
+file对象继承了Blob对象
+
+Blob对象（binary large object 二进制大对象），表示二进制原始数据。
+
+| 属性      | 描述                                                   |
+| --------- | ------------------------------------------------------ |
+| slice（） | 可以访问到字节内部的原始数据块                         |
+| size      | 表示一个Blob对象的字节长度                             |
+| type      | 表示Blob的MIME类型，如果是未知类型，则返回一个空字符串 |
+
+通过类型过滤文件：
+
+```html
+//实例：通过类型过滤图片文件
+<script>
+	function FileUpload(){
+	    var file;
+	    for(var i=0;i<document.getElementById("file").files.length;i++)
+	    {
+	        file = document.getElementById("file").files[i];
+	        if(!/image\/\w+/.test(file.type)){
+	            alert(file.name+"不是图像文件！");
+	            break;            
+	        }
+	        else{
+	            //此处可加入文件上传的代码
+	            alert(file.name+"文件已上传");
+	        }
+	    }
+	}
+</script>
+<body>
+	选择文件：
+	<input type="file" id="file" multiple/>
+	<input type="button" value="文件上传" onclick="FileUpload();"/>
+</body>
+```
+
+
+
+## 8.3、FileReader对象
+
+FileReader对象：用来把文件读入内存，并读取文件中的数据
+
+```html
+//检查浏览器是否支持FileReader对象
+     // if ( typeof FileReader == 'undefined' ) 
+     if ( ! window.FileReader )
+	  {           
+		alert( " 您的浏览器未实现 FileReader 接口 " ); 
+	  } 
+     else 
+	  {                  
+		var reader = new FileReader();   
+	  } 
+```
+
+8.3.1、FileReader方法
+
+​	**FileReader无论读取成功或失败，不返回结果，只存储在FileReader的result属性中。**
+
+| 方法名             | 参数            | 描述                                                         |
+| ------------------ | --------------- | ------------------------------------------------------------ |
+| abort              | none            | 中断读取                                                     |
+| readAsBinaryString | file            | 将文件读取为二进制字符串。通常将它传送到服务器端以存储文件   |
+| readAsDataURL      | file            | 将文件读取为DataURL。读取内容可以作为URL属性，即可以将一个图片的结果指向给一个img的src属性。 |
+| readAsText         | file,[encoding] | 将文件读取为文本数据。第一个参数传入Blog对象，第二个参数传入编码格式。 |
+
+8.3.2、FileReader对象的事件
+
+​	当FileReader对象读取文件时，会伴随着一系列事件，它们表示读取文件时不同的读取状态。
+
+| 事件        | 描述                         |
+| ----------- | ---------------------------- |
+| onabort     | 数据读取中断时触发           |
+| onerror     | 数据读取出错时触发           |
+| onloadstart | 读取开始时触发               |
+| onprogress  | 读取中                       |
+| onload      | 文件读取成功完成时触发       |
+| onloadend   | 读取完成触发，无论成功或失败 |
+
+​	实现文本文件的读取
+
+使用 FileReader 对象的 readAsText()方法实现文本文件的预览。
+
+需要注意：txt文件的编码格式需要设置为UTF-8。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

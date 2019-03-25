@@ -473,5 +473,150 @@ console.log(sum(1,0,0));
 
 7.3、参数类型与传递方式（值、引用）
 
+# 8、
+
 # 9、JS预解析
+
+## 9.1、JS解析及执行简介
+
+解析过程：
+
+- 全局预解析阶段（全局变量和函数声明前置）
+- 全局顺序执行阶段（变量赋值、函数调用等操作）
+- 当遇到调用函数时，在执行函数内代码前，进行函数范围内的预解析
+- 当存在函数嵌套时，以此类推，会进行多次函数预解析
+
+## 9.2、JS预解析（声明提升）
+
+### 9.2.1、预解析的主要工作：
+
+变量声明和函数声明提升
+
+解析器在执行当前代码前的进行扫描（var 、function）将变量和函数声明在当前作用域（全局、函数）内进行提升。
+
+```javascript
+//变量声明提升案例：
+console.log(a);        //var a;
+var a = 1;      //===>  console.log(a);
+console.log(a);        //a = 1;
+					   //console.log(a);
+
+//函数声明提升案例：
+foo();                  // function foo(){
+function foo(){         //    console.log("f_1");
+    console.log("f_1"); //}
+}				//=====>  function foo(){
+function foo(){	        //	  console.log("f_2");
+    console.log("f_2"); //}
+}						// foo();//f_2
+
+//ES5中函数及变量声明重复分话，相当于覆盖
+```
+
+### 9.2.2、声明提升
+
+```javascript
+//①、同时有var和function关键字时(情景1：函数表达式)
+foo();//报错                   //var foo = function(){
+var foo = function(){         //       console.log("foo");
+    console.log("foo");       //}
+}							  //foo();有结果foo
+
+//②、当function前有运算符的话，认定为表达式，不提升
+//上述等效代码
+var foo;                     //console.log(foo);//undefined
+foo();//报错					//var foo = function(){
+foo = function(){			 //     console.log("foo");
+    console.log("foo");		 // };
+}							 // foo();//"foo"
+
+//③、同时有var和function关键字时（情景2：变量名和函数名同名）
+AA();						//function AA(){
+function AA(){				//		console.log("AA_1");
+    console.log("AA_1");	//}
+}                 //=======>//var AA;
+var AA = function AA(){     //AA(); //AA_
+    console.log("AA_2");	// AA= function AA(){
+}							//		console.log("AA_2");
+AA();						//AA(); //AA_2
+
+//函数的提升在变量提升之上
+```
+
+## 9.3、预解析与作用域
+
+### 9.3.1、JS变量作用域
+
+变量的作用域是指变量在何处可以被访问到
+
+全局变量和局部变量
+
+ES5中没有块作用域，采用的是函数级作用域
+
+# 10、JS作用域及执行上下文
+
+## 10.1、JS作用域及特点
+
+### 10.1.1、作用域
+
+就是变量与函数的可访问范围（变量生效的区域范围，即在何处可以被访问到）
+
+![img](file:///C:\Users\lenovo\AppData\Roaming\Tencent\Users\2390140586\TIM\WinTemp\RichOle\FK{I4F9WWQ{C3_HQZ~}}G]O.png)
+
+### 10.1.2、JS作用域及特点
+
+JS采用的是词法作用域（静态性），这种静态结构决定了一个变量的作用域
+
+```JavaScript
+//词法作用域**不会被函数从哪里调用等因素影响**，与调用形式无关（体现了静态性）
+var name = 'jack';
+function echo(){
+	console.log(name);//全局变量
+}
+function env(){
+	var name = 'lili'; //此处的作用域仅限于env函数内
+	echo();
+}
+env();//jack
+
+//通过new Function创建的函数对象不一定遵从静态词法作用域
+```
+
+![img](file:///C:\Users\lenovo\AppData\Roaming\Tencent\Users\2390140586\TIM\WinTemp\RichOle\W1T4F]AVGN056DE_}JS{7IV.png)
+
+
+
+## 10.2、JS执行上下文与调用栈
+
+​	
+
+## 10.3、作用域链与执行上下文
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
