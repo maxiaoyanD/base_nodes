@@ -702,13 +702,46 @@ FileReader对象：用来把文件读入内存，并读取文件中的数据
 
 需要注意：txt文件的编码格式需要设置为UTF-8。
 
+# 9、拖放
 
+## 9.1、DataTransfer对象
 
+1. setData（format,data） --向DataTransfer对象存入数据
 
+   ev.dataTransfer.setData("text", ev.target.innerHTML);
 
+2. getData（format） --从DataTransfer对象读数据
 
+   ev.dataTransfer.getData("text");
 
+3. 现在支持拖动的MIME的类型有：
 
+4. 属性：
+
+| 属性          | 描述                         |
+| ------------- | ---------------------------- |
+| files         | 拖拽文件列表                 |
+| dropEffect    | 拖放操作的视觉效果           |
+| types         | 存入数据的种类               |
+| effectAllowed | 指定拖放操作所允许的一个效果 |
+
+## 9.2、实现拖放的步骤
+
+（1）将需要拖放的对象元素的draggable属性设为true，即draggable ='true'
+
+（2）编写与拖放有关的事件处理代码
+
+​	拖放相关的事件
+
+| 拖动生命周期 | 事件 | 描述 | 产生事件的元素 |
+| ------------ | ---- | ---- | -------------- |
+|              |      |      |                |
+|              |      |      |                |
+|              |      |      |                |
+|              |      |      |                |
+|              |      |      |                |
+|              |      |      |                |
+|              |      |      |                |
 
 
 

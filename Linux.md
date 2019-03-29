@@ -36,11 +36,17 @@ sudo chown leonard:physics /phy_share
 
 
 
-
-
 nano
 
 配置：sudo nano /etc/nanorc
+
+//03/26
+
+大于号就是输出重定向
+
+小于号就是输入重定向
+
+wc -l :按行统计Ctrl+d退出
 
 
 

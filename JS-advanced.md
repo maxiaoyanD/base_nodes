@@ -417,11 +417,34 @@ console.log(sum(1,0,0));
 
 ## 7.1、函数的定义与调用
 
-7.1.1、函数的定义方式（3）
+### 7.1.1、函数的定义方式（3）
 
-7.1.2、函数的调用方法（4）
+1. 通过函数声明的形式来定义
+2. 通过函数表达式的形式来定义（可以是没有函数名的匿名函数，有名的话方便调用栈追踪）
+3. 通过function构造函数实例化的形式来定义（JS中函数也是对象，函数对象）
 
-作为
+```javascript
+//1、函数声明方式
+function max(a,b){
+    return a>b?a:b;
+}
+max(2,3);
+
+//2、函数表达式方式 
+//等号右侧可以是匿名函数也可以是非匿名函数
+//注意：函数调用不可以放在函数声明之上
+var max = function(a,b){
+    return a>b?a:b;
+}
+max(2,3);
+
+//3、用function构造函数
+//function实例化函数，执行效率相对较低，但是更加灵活
+ var max = new Function('a','b','renturn a>b?a:b');
+ max(1,2);
+```
+
+### 7.1.2、函数的调用方法（4）
 
 ```javascript
 //四种调用方式
@@ -442,6 +465,64 @@ console.log(sum(1,0,0));
     };
     obj.test();//0
 
+//在普通函数调用，this指向全局对象
+//当函数不作为对象的的属性调用时，就相当于普通函数，this指代的是全局对象
+//当他作为对象的属性调用时，指该对象
+//例一
+var x = 45;
+var test = function(){
+    console.log("输出：",this.x);
+}
+var obj = {
+    x:23
+}
+obj.test = test;
+obj.test();//23
+test();//45
+//例二
+var x = 45;
+var obj = {
+    x:23,
+    test:function(){
+        function foo(){
+            console.log(this.x);
+        } 
+        foo();
+    }
+}
+obj.test();
+
+//给obj动态添加方法
+var obj ={
+    name : 'jsck'
+}
+var sayHi = function(){
+    console.log("Hi,i'm",this.name);
+}
+obj.sayHi = sayHi;//给对象添加方法
+obj.sayHi();//Hi,i'm jack
+
+//思考如下代码 详情参见高阶函数函数章节
+var x=55;
+var obj=function(){
+    name:'hhh'
+}
+var fun1 = function(){
+    return function fn2(){
+        return this.x;//若改为return this;
+    }
+};
+obj.fun3 = fun1;
+obj.fun4 = fun1();
+console.log(obj.fun3());//fun2函数 √
+console.log(obj.fun3()())//55 √
+console.log(obj.fun4())//我以为的结果是55，实际结果是undefined
+/**
+ * 改为return this
+ * console.log(obj.fun3());//fun2函数
+ * console.log(obj.fun3()())//window
+ * console.log(obj.fun4())//ƒ (){name:'hhh'}
+*/
 
 //3-通过call()和aplly()间接调用
     //(this为函数对象的call/apply方法的首个参数，移花接木)
@@ -470,6 +551,8 @@ console.log(sum(1,0,0));
 ```
 
 7.2、函数参数的数量问题
+
+
 
 7.3、参数类型与传递方式（值、引用）
 
@@ -561,8 +644,6 @@ ES5中没有块作用域，采用的是函数级作用域
 
 就是变量与函数的可访问范围（变量生效的区域范围，即在何处可以被访问到）
 
-![img](file:///C:\Users\lenovo\AppData\Roaming\Tencent\Users\2390140586\TIM\WinTemp\RichOle\FK{I4F9WWQ{C3_HQZ~}}G]O.png)
-
 ### 10.1.2、JS作用域及特点
 
 JS采用的是词法作用域（静态性），这种静态结构决定了一个变量的作用域
@@ -588,13 +669,15 @@ env();//jack
 
 ## 10.2、JS执行上下文与调用栈
 
-​	
+​	执行上下文指代码执行时的上下文环境（包括局部变量、相关的函数、相关自由变量等）
+
+​	JS运行时会产生多个执行上下文，处于活动状态的执行上下文环境只有一个。
+
+调用栈（Call Stack）：代码执行时JS引擎会以栈的方式来处理和追踪函数调用。
 
 ## 10.3、作用域链与执行上下文
 
-
-
-
+11、
 
 
 
