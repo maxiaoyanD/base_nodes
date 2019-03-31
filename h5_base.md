@@ -704,50 +704,129 @@ FileReader对象：用来把文件读入内存，并读取文件中的数据
 
 # 9、拖放
 
-## 9.1、DataTransfer对象
+## 9.1、拖放
 
-1. setData（format,data） --向DataTransfer对象存入数据
+1. **源对象**：值鼠标点击一个事物，可以是图片，DIV，一段文本等等
+2. **目标对象**：值拖动源对象后移动到一块区域，源对象可以进入到这个区域，可以在这个区域上方悬停（未松手），可以松手释放将源对象放置此处（已松手），也可以悬停后离开该区域。
 
-   ev.dataTransfer.setData("text", ev.target.innerHTML);
+## 9.2、DataTransfer对象
 
-2. getData（format） --从DataTransfer对象读数据
+1. **DataTransfer**：拖拽数据传递对象，为**事件对象的一个属性**，用于在源对象和目标对象的事件间传递字符串格式的数据。（保存被拖动的数据）
 
-   ev.dataTransfer.getData("text");
+2. **事件对象**：在触发DOM上的某个事件时，会产生一个事件对象Event。事件对象包含所有与事件相关的信息。包括导致事件的元素、事件的类型、键盘按键状态、鼠标的位置等。在事件处理函数执行时，事件对象会由浏览器自动传递给事件处理函数。事件处理函数中，声明形参接收该参数。**preventDefault（）取消事件的默认动作。**
 
-3. 现在支持拖动的MIME的类型有：
+3. **DataTransfer对象的方法：**
 
-4. 属性：
+   setData（format,data） --向DataTransfer对象存入数据
 
-| 属性          | 描述                         |
-| ------------- | ---------------------------- |
-| files         | 拖拽文件列表                 |
-| dropEffect    | 拖放操作的视觉效果           |
-| types         | 存入数据的种类               |
-| effectAllowed | 指定拖放操作所允许的一个效果 |
+   ​	ev.dataTransfer.setData("text", ev.target.innerHTML);
 
-## 9.2、实现拖放的步骤
+   getData（format） --从DataTransfer对象读数据
+
+   ​	ev.dataTransfer.getData("text");
+
+4. 现在支持拖动的MIME的类型有：
+
+   “text/plain（文本文字）”、“text/html”、“text/xml”、“text/url-list（URL列表，每个URL为一行）”
+
+5. **DataTransfer对象的属性**：
+
+| 属性          | 描述                                                         |
+| ------------- | ------------------------------------------------------------ |
+| files         | 拖拽文件列表                                                 |
+| dropEffect    | 拖放操作的视觉效果（在PC Web端主要是鼠标手型上，值为copy，link，move或none） |
+| types         | 存入数据的种类                                               |
+| effectAllowed | 指定拖放操作所允许的一个效果                                 |
+
+## 9.3、实现拖放的步骤
 
 （1）将需要拖放的对象元素的draggable属性设为true，即draggable ='true'
 
+​	注：img元素和a元素默认允许拖放
+
 （2）编写与拖放有关的事件处理代码
 
-​	拖放相关的事件
+​	**拖放相关的事件**
 
-| 拖动生命周期 | 事件 | 描述 | 产生事件的元素 |
-| ------------ | ---- | ---- | -------------- |
-|              |      |      |                |
-|              |      |      |                |
-|              |      |      |                |
-|              |      |      |                |
-|              |      |      |                |
-|              |      |      |                |
-|              |      |      |                |
+| 拖动生命周期 | 事件      | 描述         | 产生事件的元素           |
+| ------------ | --------- | ------------ | ------------------------ |
+| 拖动开始     | dragstart | 开始拖拽     | 被拖放的元素             |
+| 拖动过程中   | drag      | 拖放过程中   | 被拖放的元素             |
+| 拖动过程中   | dragenter | 拖拽进入     | 拖放过程中鼠标经过的元素 |
+| 拖动过程中   | dragover  | 拖拽经过     | 拖放过程中鼠标经过的元素 |
+| 拖动过程中   | dragleave | 拖拽离开     | 拖放过程中鼠标经过的元素 |
+| 拖动结束     | drop      | 拖拽释放     | 目标元素                 |
+| 拖动结束     | dragend   | 拖放操作结束 | 目标元素                 |
 
+```javascript
+document.addEventListener('dragstart', function (event) {
+		console.log('dragstart开始拖拽: ' + event.dataTransfer);	
+	});
+	document.addEventListener('dragenter', function (event) {
+		console.log('dragenter拖拽进入: ' + event.dataTransfer);	
+	});
+	document.addEventListener('dragleave', function (event) {
+		console.log('dragleave拖拽离开: ' + event.dataTransfer);	
+	});
+	document.addEventListener('dragover', function (event) {
+		event.preventDefault();//必须要有，默认
+		event.dataTransfer.dropEffect = "copy";
+		console.log('dragover拖拽经过: ' + event.dataTransfer);	
+	});
+	document.addEventListener('drop', function (event) {
+		console.log('drop拖拽释放: ' + event.dataTransfer);	
+	});
+	document.addEventListener('dragend', function (event) {
+		console.log('dragend拖放操作结束: ' + event.dataTransfer);	
+	});
+```
 
+**（3）拖放**
 
-
-
-
+```html
+（1）源对象设置元素为可拖放：draggable=“true”
+（2）源对象设置拖动什么 ondragstart 和setData（） 
+（3）目标对象放置元素到何处 ondragover （默认无法将元素放置到其他元素中。如果需要设置允许放置，必须阻止对元素的默认处理方式）
+（4）目标对象进行放置 ondrop 忽和 getData（） 
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="icon"/>
+	<style type="text/css">
+		div{
+			border:2px solid gray;
+			width:180px;
+			height:180px;
+		}
+	</style>
+</head>
+<body>
+	<!-- 3、给目标对象设置可放置属性
+		 4、给目标对象绑定结束时的事件处理函数 -->
+	<div ondragover="allowDrop(event)" ondrop="drop(event)"></div>
+	<!-- 1、在原对象上设置为可拖放
+		 2、给原对象设置开始拖放事件 -->
+	<img src="images/taidi.jpg" id="dragimg" draggable='true' ondragstart="drag(event)"/>
+</body>
+<script>
+	function drag(ev){
+		//这里的target指代原对象
+		ev.dataTransfer.setData("Text",ev.target.id);
+	}
+	function allowDrop(ev){
+		ev.preventDefault();
+	}
+	function drop(ev){
+		ev.preventDefault();
+		var data = ev.dataTransfer.getData("Text");//获取原对象的id
+		ev.target.appendChild(document.getElementById(data));//此时的target指代当前目标对象
+		alert("移动成功了！！");
+	}
+</script>
+</html>
+```
 
 
 

@@ -550,11 +550,68 @@ console.log(obj.fun4())//我以为的结果是55，实际结果是undefined
 
 ```
 
-7.2、函数参数的数量问题
+## 7.2、函数参数的数量问题
+
+```javascript
+//实参大于形参
+//通过函数对象的属性arguments获得所有实参、类数组对象
+function test(){
+    console.log(arguments);
+    console.log(test.arguments == arguments.arguments);//false
+    console.log(arguments.length);//4
+    console.log(typeof arguments);//Object
+    console.log(arguments instanceof Array);//false
+    console.log(arguments instanceof Object);//true 
+    console.log(Array.prototype.slice.call(arguments));//["Hello",",","World","!"]
+    var s = "";
+    for(var i=0;i<arguments.length;i++){
+        s += arguments[i];
+    }
+    return s;
+}
+test("Hello",",","World","!");
+
+//实参小于形参 
+//少的参数值为undefined，可以引用||来给出默认值
+
+var sum = function(a,b,c){
+    b = b||4;
+    c = c||5;
+    return a+b+c;
+}
+console.log(sum(1,2,3))//6
+console.log(sum(1,2));//8
+console.log(sum(1));//10
+```
+
+## 7.3、参数类型与传递方式（值、引用）
+
+```javascript
+//值传递
+ //实参为基本数据类型时，参数改变不影响实参
+ var a = 1;
+ function foo(x){
+     console.trace("a:",a,"x:",x);//a:1,x:1
+     x=2;//step 22222
+     console.trace("a:",a,"x:",x);//a:1,x:2
+ }
+ console.trace("a:",a);//a:1
+ foo(a);//step 111111
+ console.trace("a:",a);//a:1
 
 
-
-7.3、参数类型与传递方式（值、引用）
+ //引用传递
+ //实参为引用数据类型时，形参改变影响实参
+ var obj = {x:1};
+ function fee(o){
+     console.trace("obj.x:",obj.x,"o.x",o.x);//1,1
+     o.x = 3;
+     console.trace("obj.x:",obj.x,"o.x",o.x);//3,3
+ }
+ console.trace("obj.x:",obj.x);//1
+ fee(obj);
+ console.trace("obj.x:",obj.x);//3
+```
 
 # 8、
 
@@ -677,9 +734,79 @@ env();//jack
 
 ## 10.3、作用域链与执行上下文
 
-11、
+​	执行时，当前执行上下文，对应一个作用域链环境来管理和解析变量和函数（动态性）
 
+​	变量查找按照有内到外的顺序（遵循词法作用域），直到完成查找，若为查询到则报错
 
+​	当函数执行结束，运行期上下文被销毁，此作用域链环境也随之被释放
+
+# 11、JS中的IIFE模式
+
+## 11.1、IIFE及使用方式
+
+​	IIFE：立即执行函数表达式
+
+**作用**：建立函数作用域，解决ES5作用域缺陷所带来的问题，如：变量污染、变量共享等问题
+
+**写法**：（function foo(x,y){......}(2,3)）; 
+
+​	      (function foo(x,y){......})(2,3);
+
+**注意：IIFE是表达式，要注意使用分号结尾，否则可能出现错误。。。**
+
+## 11.2、IIFE解决问题
+
+​	**通过IIFE对作用域的改变（限制变量生命周期）**
+
+Js（ES5）中没有块作用域，容易造成js文件内或文件间同名变量相互污染。可以通过IIFE引入一个新的作用域来限制变量的作用域，来避免变量污染，可以通过IIFE引入一个新的作用域来限制变量的生命周期
+
+​	**通过IIFE对变量存储的改变（避免变量共享错误）**
+
+## 11.3、IIFE实际应用案例
+
+避免闭包中废弃物的变量共享问题（页面导航问题）
+
+# 12、JS闭包（closure）
+
+## 12.1、闭包的概念
+
+​	闭包：由函数和与其相关的引用环境组合而成的实体，是词法作用域中的函数和其相关变量的包裹体
+
+```JavaScript
+    //闭包
+    /*闭包：
+        函数通过返回函数（fn1）内部定义的函数（fn2）来访问fn1
+        内部的局部变量（x）
+    */
+    //访问fn1内部变量x,借助fn1内部定义的函数fn2来访问内部变量
+    function fn1(){
+        var x = 1;
+        function fn2(){
+            return ++x;
+        }
+        return fn2;
+    }
+    var fn3 = fn1();//得到fn2函数
+    console.log(fn3());//2
+    console.log(fn3());//3
+//例子
+function foo(){
+    var i=0;
+    function bar(){
+        console.log(++i);
+    }
+    return bar;
+}
+var a = foo();
+var b = foo();
+a();//1
+a();//2
+b();//1
+```
+
+## 12.2、闭包的常见形式
+
+## 12.3、闭包的作用及常用场景
 
 
 
