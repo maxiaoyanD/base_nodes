@@ -188,6 +188,136 @@ group by cno
 having count(*)>3
 --having作用于组，where作用于基表或试图
 --******************连接查询************************************
+--连接运算符为 = 时，称为等值连接，等值连接中去掉目标列的重复属性则为自然连接
+--其他运算符为非等值连接
+--查询每个学生及其选修课程的情况
+select student.*,sc.*
+from student,sc
+where studet.sno = sc.sno
+--自身连接 ，自己与自己连接，一般起别名
+--查询每一门可定简介先修课
+select first.cno,second.cpno
+from course first,course second
+where first.cpno = second.cno
+--外连接(一般***没有也包括就用外连接)******************************
+--外连接 full outer join 
+--左外链接 left outer join
+--右外连接 right outer join
+--查询每个学生及其选修课的情况，包括没有选修课程的学生
+select student.sno,sname,sdept,cno,grade
+from student left outer join sc
+on student.sno=sc.sno
+--嵌套查询******************************************************
+--子查询不能使用order by
+--不相关子查询
+	子查询的查询条件不依赖于父查询（有里向外查询，子查询为父查询提供条件）
+--相关子查询
+	子查询的查询条件依赖于父查询（外层提供查询条件）
+/*带有in谓词的子查询*/
+--查询和‘刘晨’一个系的学生
+select sname
+from student
+where sdept in(
+	select sdept
+    from student
+    where sname='刘晨'
+)
+--查询选修了课程名为‘信息系统’的学生学号和姓名（从内向外推）
+select sno,sname
+from student
+where sdept in(
+	select sno
+    from sc
+    where cno in(
+    	select cno
+        from course
+        where cname='信息系统'
+    )
+)
+/*带有比较运算符的子查询*/
+
+--找出每个学生超过他选修课程平均成绩的课程号
+select cno
+from student x
+where grade>=(
+	select avg(grade)
+    from student y
+    where x.sno = y.sno
+)
+/*any 任意一个 <（>）any 小于某一个值（大于某一个值）
+ *all 所有值	<（>）all 小于所有值（大于最大值）
+ */
+ --查询其他系中比信息系任意一个学生年龄小的学生姓名和年龄
+ select sname,sage
+ from student
+ where sage <any(
+ 	select sage
+    from student
+    where sdept='IS'
+ )
+ and sdept != 'IS'
+ --查询其他系中比计算机科学系所有学生年龄小的学生姓名和年龄
+ select sname,sage
+ from student
+ where sage <all(
+ 	select sage
+     from student
+     where sdept = 'CS'
+ )and sdept != 'CS'
+/*带有exists谓词的子查询*/
+
+--带有exists谓词的子查询不返回任何数据，只产生逻辑真值
+	若内层查询非空，则外层的where子句返回真值
+	若内层查询为空，则外层的where子句返回false
+--not exists
+	若内层查询非空，则外层的where子句返回false
+	若内层查询为空，则外层的where子句返回true
+--用exists查询子查询中的select后都是*
+--查询所有先修了1号课程的学生姓名
+select sname
+from student
+where exists
+	(select *
+   	 from sc
+     where cno = '1' and student.sno = sc.sno
+    )
+--查询没有选修1号课程的学生姓名
+select sname
+from student
+where not exists
+	(select *
+     from sc
+     where student.sno = sc.sno and cno='1'
+    )
+--查询选修了全部课程的学生姓名（没有课程没有学生不选）
+select sname
+from student
+where not exists
+	(select *
+     from course
+     where not exists
+     	(select *
+         from sc
+         where sc.sno = student.sc and 
+         	sc.cno = course.cno
+        )
+    )
+--查询至少选修了学生201215122选修的全部课程的学生学号
+select distinc sno
+from sc x
+where not exists
+(
+	select *
+    from sc y
+    where y.sno ='201215122' and
+    not exists
+    (
+    	select *
+        from sc z
+        where z.sno=x.sno
+        and z.cno = y.cno
+    )
+)
 
 ```
 
