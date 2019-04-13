@@ -293,13 +293,15 @@ where not exists
 select sname
 from student
 where not exists
-	(select *
-     from course
-     where not exists
-     	(select *
-         from sc
-         where sc.sno = student.sc and 
-         	sc.cno = course.cno
+	(
+        select *
+     	from course
+     	where not exists
+     	(
+            select *
+         	from sc
+         	where sc.sno = student.sc and 
+         		sc.cno = course.cno
         )
     )
 --查询至少选修了学生201215122选修的全部课程的学生学号
