@@ -2,6 +2,12 @@ create database student   --- 创建数据库
 
 dbo ----- 系统默认架构
 
+# 2、关系代数
+
+没有使用。。。。用整体-有的
+
+至少有或者查询全部 用÷
+
 # 3、关系数据库标准语言
 
 学生表：Student(Sno,Sname,Ssex,Sage,Sdept)
@@ -16,7 +22,6 @@ dbo ----- 系统默认架构
 	--唯一性约束 unique
 	--非空值约束 not null
 	--参照完整性约束 foreign key(参照) references 参照表(被参照列)
-
 --**********创建数据库*******************************************
 create database student
 --使用数据库
@@ -62,7 +67,7 @@ drop database student
 	--drop table
 		--restrict 删除表是有限制的，不能被其他表的约束条件所引用，如果有约束条件此表不能被删除
 		--cascade 删除该表没有限制
---添加列(student表中添加一列入学时间，类型是date型)
+--添加列(student表中添加一列入学时	间，类型是date型)
 alter table student add s_entrace date
 --修改数据类型
 alter table student alert column Sage int
@@ -70,7 +75,7 @@ alter table student alert column Sage int
 alter table course add unique(Cname)
 --删除基本表
 drop table student
-
+                                                                                                                                                                                 
 
 --*************建立索引*****************************************
 --asc 升序
@@ -195,7 +200,7 @@ select student.*,sc.*
 from student,sc
 where studet.sno = sc.sno
 --自身连接 ，自己与自己连接，一般起别名
---查询每一门可定简介先修课
+--查询每一门可定间接先修课
 select first.cno,second.cpno
 from course first,course second
 where first.cpno = second.cno
