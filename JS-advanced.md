@@ -810,17 +810,277 @@ b();//1
 
 ## 12.3、闭包的作用及常用场景
 
+# 13、JS对象综述
+
+## 13.1、JS对象简介
+
+​	JS对象是一个复合值，将很多值复合在一起(包括原始类型值、对象、函数)
+
+​	JS对象是若干无序属性的集合，可以直接通过属性名来访问对象的属性（键值对）
+
+​	函数作为某一个对象的属性时，称其为该对象的方法。
+
+```javascript
+var obj = {
+    num:10,
+    str:"Hi",
+    show:function(){
+        console.log(this.str);
+    }
+};
+console.log(obj.num);//10
+console.log(obj.str);//Hi
+obj.show();			 //Hi
+
+// 左边instanceof 右边：
+/** 含义：
+ * 1，左边是右边的一个实例吗
+ * 2，左边的__proto__原型链上是否包含右边的prototype
+*/
+/**
+ * 对象 instanceof 构造函数
+ * 1，判断对象能否使用该构造函数实例化得到
+ * 2，判断对象的原型链上能否找到该构造函数的原型
+ * 对象.__proto__.__proto__.(长度不确定)==构造函数.prototype
+ */
+/*任何对象 instanceof Object都得true，
+ *因为Object是所有对象的原型
+ */
+console.log(Object instanceof Function);//true
+console.log(Object instanceof Object);//true
+console.log(Boolean instanceof Function);//true
+console.log(Boolean instanceof Object);//true
+console.log(String instanceof Function);//true
+console.log(String instanceof Object);//true
+console.log(Number instanceof Function);//true
+console.log(Number instanceof Object);//true
+console.log(Function instanceof Function);//true
+console.log(Function instanceof Object);//true
+console.log(Array instanceof Function);//true
+console.log(Array instanceof Object);//true
+console.log(Date instanceof Function);//true
+console.log(Date instanceof Object);//true
+console.log(Math instanceof Function);//false
+console.log(Math instanceof Object);//true
+console.log(JSON instanceof Function);//false
+console.log(JSON instanceof Object);//true
+```
+
+获取对象属性的三种方法
+
+```javascript
+var obj={
+    "x":1,
+    "y":2
+}
+console.log(obj.x);
+console.log(obj['y']);
+var z='age';
+//1、.
+obj.z=20
+console.log(obj);//x:1,y:2,z:20
+//2、[变量]
+obj[z]=20;
+//如果z变量是变量会取变量的值作为名称
+//如果z是字符串就会用字符串作为名称
+console.log(obj);//x:1,y:2,age:20
+//3、['']
+obj['z'] = 20;
+console.log(obj);//x:1,y:2,z:20
+```
+
+## 13.2、JS对象的属性
+
+​	JS的访问器属性
+
+如果只有get方法则为只读属性，不可修改内容
+
+如果只有set方法则为只写属性，不能读取，读取结果为undefined
+
+实现数据属性的间接访问，可实现数据的验证、过滤、运算等功能
+
+```javascript
+var o = {
+    _x:1,
+    get x(){
+        return this._x;
+    },
+    set x(val){
+        this._x = val;
+    }
+};
+console.log(o.x);//1
+o.x=2;
+console.log(o.x,o._x);//2 2
+o.hasOwnProperty("x");//true 访问器属性
+o.hasOwnProperty("_x");//true 数据属性
+```
+
+## 13.3、JS对象相关操作
+
+### 13.3.1、创建对象（3种）
+
+```javascript
+    /*
+        1、 var obj1 = {
+            属性名:方法值,
+            方法名:方法
+        };
+        2、var obj1 = {};
+           var obj2 = Object.cteate(obj1);
+        3、function exo(){};
+           var l = new exo();
+    */
+```
+
+（1）通过字面量的方式创建
+
+```javascript
+var obj = {
+    num:10,
+    str:"Hi",
+    show:function(){
+        return this.str;
+    }
+};
+console.log(obj.num);//10
+console.log(obj.str);//"Hi"
+console.log(obj.show());//"Hi"
+console.log(obj.__proto__);
+console.log(obj.__proto__ == Object.prototype);//true
+
+```
+
+（2）、通过Object的create静态方法创建
+
+```javascript
+//注：JS对象是通过原型链的方式实现的对象继承
+var newObj = Object.create(obj);
+//newObj的原型是obj
+newObj.age=23;
+console.log(newObj.age);//是newObj自有的属性
+console.log(newObj.__ptoto__)//obj
+console.log(newObj.__proto__ == obj);//true
+```
+
+（3）构造函数创建
+
+```javascript
+/*传统的构造函数*/
+    function fans(username,age){
+        //这里的this指代当前函数实例化的对象
+        this.username = username,
+        this.age = age;
+        this.sayHi = function(){
+            console.log(this.username);
+        }
+    }
+    var person1 = new fans("zhangsan",20);
+    var person2 = new fans("lisi",19);
+    /*现在的构造函数*/
+    function fans(username,age){
+        //这里的this指代当前函数实例化的对象
+        this.username = username,
+        this.age = age;
+    }
+    fans.prototype.sayHi = function(){
+        console.log(this.username);
+    }
+    var person1 = new fans("zhangsan",20);
+    var person2 = new fans("lisi",19);
+    console.log(person1.__proto.__ == fans.protortpe);
+```
+
+### 13.3.2、对象属性的增删该查
+
+```javascript
+var obj = {};
+obj.x = 2;//直接添加属性
+console.log(obj.x);//通过.访问属性
+obj.x = 5;//设置属性
+console.log(obj["x"]);//通过[]访问属性
+delete obj.x;//删除属性
+console.log(obj.x);
+
+//思考obj3 和 obj4 内容是什么？为什么？
+var obj3 = {};
+for(var i=0;i<10;i++){
+    obj3.i = i;
+}
+
+var obj4 = {};
+for(var i=0;i<10;i++){
+    obj4[i] = i;
+}
+```
+
+# 14、JS对象属性特性
+
+## 14.1、对象属性特性简介
+
+```javascript
+var objProto = {
+    z:3
+};
+var obj = Object.create(objProto);
+obj.x = 1;
+obj.y = 2;
+console.log(obj.x);//1
+console.log(obj.y);//2
+console.log(obj.z);//3
+
+console.log(obj.__proto__)
+//原型链上有toString属性
+console.log(obj.toString);
+//对象上的某些属性和方法是没有办法遍历出来的
+//用for in 来遍历所有原型链上的属性
+for(var k in obj){
+    console.log(k,obj[k]);
+}
+//x:1,y:2,z:3
+```
+
+## 14.2、对象属性（数据属性）特性
+
+### 14.2.1、对象属性特性及其设置
+
+使用defineProperty方法设置
+
+Object.defineProperty(obj,x,{});
+
+| 特性         | 含义                           |
+| ------------ | ------------------------------ |
+| value        | 对应的属性值                   |
+| writable     | 确定是否可写                   |
+| configurable | 确定属性是否能删除，是否可配置 |
+| enumerable   | 确定是否可枚举                 |
+
+```javascript
+var obj = {
+    x:1
+}
+Object.defineProperty(obj,"x",{
+    //是否可修改，name属性是不可修改的
+    writable:false,
+    //是否可配置，定义的属性能否被删除
+    configurable:false,
+    //是否可枚举，定义属性能否被遍历到
+    enumerable:true,
+    //定义属性值
+    value:'hhh'
+});
+for(var k in obj){
+    console.log(k,obj[k]);
+}
+```
+
+### 14.2.2、对象添加属性
+
+## 14.3、对象访问器属性的特性
 
 
 
-
-
-
-
-
-
-
-
+## 14.4、特性描述符及补充
 
 
 
