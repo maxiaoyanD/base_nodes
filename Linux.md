@@ -68,6 +68,15 @@ fg 任务编号 转到前台继续执行
 
 bg 任务编号 转到后台执行
 
+# 13、shell脚本基础
+
+```shell
+shell脚本语言
+#!/bin/bash
+uname -a
+lspci -vt
+```
+
 
 
 

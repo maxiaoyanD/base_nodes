@@ -913,7 +913,7 @@ context.arc(x,y,r,sAngle,eAngle,anticolckwise)
 | eAngle        | 结束角                                                    |
 | anticlockwise | 可选，否则安好逆时针方向绘图。false=顺时针，true=逆时针   |
 
-# 10.4、绘制矩形
+## 10.4、绘制矩形
 
 context.rect(x,y,width,height)
 
@@ -930,7 +930,7 @@ context.rect(x,y,width,height)
 | strokeRect(x,y,width,height) | 绘制不填色的矩形（空心）   |
 | clearRect(x,y,width,height)  | 清空给定矩形内的指定像素   |
 
-# 10.5、透明度 
+## 10.5、透明度 
 
 **globalApha属性**
 
@@ -1013,3 +1013,101 @@ save()把当前状态的一份拷贝压入到一个保存图像状态的栈中�
 | shadowOffsetX | 设置形状与阴影的水平距离，默认值为0 |
 | shadowOffsetY | 设置形状与阴影的垂直距离，默认值为0 |
 
+# 12、画布(三)
+
+## 12.1、渐变色
+
+### 12.1.1、线性渐变
+
+线性颜色渐变：从一端到另一端的颜色渐变
+
+**createLinearGradient（x0,y0,x1,y1）**创建线性渐变对象
+
+​	使用该对象作为strokeStyle 或fillStyle属性的值
+
+| 参数  | 描述                |
+| ----- | ------------------- |
+| x0,y0 | 渐变开始点的x,y坐标 |
+| x1,y1 | 渐变结束点的x,y坐标 |
+
+**addColorStop（stop，color）**规定渐变对象中的颜色和停止位置
+
+​	如果不适用该方法，渐变色将不可见。需要创建至少一个色标。
+
+​	可以多次调用此方法来改变渐变。
+
+| 参数  | 描述                                                 |
+| ----- | ---------------------------------------------------- |
+| stop  | 介于0.0与0.1之间的值，表示渐变中开始与结束之间的位置 |
+| color | 在结束为止显示的CSS颜色值                            |
+
+```javascript
+var gradient = ctx.createLinearGradient(0,0,400,0);
+gradient.addColorStop("0",'magenta');
+gradient.addColorStop('0.5','blue');
+gradient.addColorStop('1','red');
+ctx.lineWidth = 5;
+ctx.strokeStyle = gradient;
+ctx.strokeRect(50,50,500,300);
+
+ctx.font='50px Verdana';
+ctx.strokeText("hello canvas!",70,120);
+```
+
+两个临近stop距离之间的颜色是过渡色。
+
+小于最小stop的部分会按最小stop的color来渲染，大于最大stop的部分会按最大的stop的color来渲染
+
+### 12.1.2、放射渐变
+
+放射性渐变: 从一个点或一个圆向外进行辐射性的颜色渐变
+
+**createRadialGradient（x0,y0,r0,x1,y1,r1）**;创建放射状/环形的渐变对象
+
+| 参数     | 描述                        |
+| -------- | --------------------------- |
+| x0,y0,r0 | 渐变的开始圆的x,y坐标和半径 |
+| x1,y1,r1 | 渐变的结束圆的x,y坐标和半径 |
+
+```javascript
+var gradient = ctx.createRadialGradient(100,100,0,100,100,100);
+gradient.addColorStop(0,"white");
+gradient.addColorStop(1,"green");
+// 填充渐变
+ctx.fillStyle = gradient;
+ctx.fillRect(0,0,200,200);
+```
+
+## 12.2、图片填充与合成
+
+**createPattern(image,'repeat \ repeat-x \ repeat-y \ no-repeat')**
+
+​	可在指定的方向内重复指定的元素
+
+​	元素可以是图片、视频或者其他canvas元素
+
+​	被重复的元素可用于绘制/填充矩形、圆形或线条等。
+
+| 参数      | 描述                             |
+| --------- | -------------------------------- |
+| image     | 规定要使用的图片、画布或视频元素 |
+| repeat    | 默认，该模式在水平和垂直方向重复 |
+| repeat-x  | 该模式只在水平方向重复           |
+| repeat-y  | 该模式只在垂直方向重复           |
+| no-repeat | 该模式只显示一次 不重复          |
+
+​	**合成操作**
+
+**globalCompositeOperation属性**  设置如何将一个源图像绘制到目标图像上。
+
+​	源图像-----打算放置到画布上的绘图
+
+​	目标图像--已经放置在画布上的绘图
+
+![1556026180579](D:\大二下\H5程序设计基础\1556026180579.png)
+
+12.3、图片绘制
+
+12.4、像素操作
+
+12.5、动画循环
