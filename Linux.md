@@ -77,9 +77,69 @@ uname -a
 lspci -vt
 ```
 
+15、shell脚本基础 - 逻辑、循环、函数
+
+​	test是shell的内建命令，经常用于各类的检测工作，产生的不是一般形式的输出，而是可用的退出状态。经常和if，while等用于条件的关键字配合使用。
+
+​	test返回的结果在shell中运行不会输出，只会返回true或false（true是0，false是1）
 
 
 
+| 命令               | 含义                              |
+| ------------------ | --------------------------------- |
+| test "abc" = "abc" | 检测字符串是否相等                |
+| test -f  c/a.c     | 检测c/a.c文件是否存在且为普通文件 |
+| test  -d bin       | 检测bin是否为目录                 |
+| test -z $A         | 如果字符串为空则返回true          |
+| test -n $A         | 如果字符串不为空则返回true        |
+
+```vim
+#if elif else
+#写在一行要用分号分隔
+if [command]; then
+	[command]
+elif [command];
+then
+	[command]
+else 
+	[command]
+fi
+
+#case
+case WORD in
+	values1)
+		[command]
+		;;
+	values2)
+		[command]
+		;;
+	*)
+		[command]
+		;;//esac之前的;;可以省略
+esac
+
+#for循环
+for name in words;
+do commands;
+done
+
+#while循环
+while condition;
+do commands
+done
+while循环的条件是命令的执行状态
+```
+
+shell脚本的一些特殊变量
+
+| 变量 | 含义                                           |
+| ---- | ---------------------------------------------- |
+| $0   | 当前shell脚本的名称                            |
+| $N   | 参数，使用$1,$2,......,10以上的要用${10}的形式 |
+| $@   | 所有参数，可以使用for循环遍历                  |
+| $#   | 参数个数，不包括脚本名称                       |
+| $?   | 上一个命令的返回值，通常在if中使用             |
+| $$   | 当前shell的PID                                 |
 
 
 

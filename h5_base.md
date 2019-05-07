@@ -1111,3 +1111,77 @@ ctx.fillRect(0,0,200,200);
 12.4、像素操作
 
 12.5、动画循环
+
+
+
+# 16、渐变与变形处理
+
+## 16.1、渐变效果
+
+### 16.1.1、线性渐变
+
+​	**background:linear-gradient(direction,color-stop1,color-stop2,........);**
+
+**重复的线性渐变：**
+
+​	**background:repeating-linear-gradient(direction,color-stop1,color-stop2,........);**
+
+在一条直线上进行颜色渐变，渐变线由包含渐变图形的容器的中心点和一个角度来定义的。
+
+​	**linear-gradient(to bottom,#fff,#999)；**
+
+第一个参数：制定渐变方向，可以用角度或英文关键词（省略默认180deg）
+
+第二、三个参数：表示颜色的起始点和结束点，可以有多个颜色。
+
+| 角度   | 英文         | 作用           |
+| ------ | ------------ | -------------- |
+| 0deg   | to top       | 从下到上       |
+| 90deg  | to right     | 从左到右       |
+| 180deg | to bottom    | 从上到下       |
+| 270deg | to left      | 从右到左       |
+| 45deg  | to top right | 左下角到右上角 |
+
+```html
+//切角效果*/
+.div1{
+            height: 100px;
+            width: 100px;
+            background: linear-gradient(45deg,transparent 20px, lightgreen 20px);
+        }
+```
+
+### 16.1.2、径向渐变
+
+​	**background:radial-gradient(shape at position,color1,color2.....);**
+
+从起点到终点，颜色从内到外进行圆形渐变（从中间向外拉，像圆一样）
+
+shape：
+
+​	circle：圆形；ellipse：椭圆形（默认）
+
+position：
+
+​	关键字：center。。；长度值：px或百分比
+
+```html
+.div1{
+            background: radial-gradient( 50% 50%,red 0%, yellow 20%,black 50%,green 80%, yellow);
+        }
+        .div2{
+            background: radial-gradient(circle at 50% 50%,red 0%, yellow 20%,black 50%,green 80%, yellow);
+        }
+        .div3{
+            background: radial-gradient(circle at top left,red 0%, yellow 20%,black 50%,green 80%, yellow);
+        }
+        .div4{
+            background: radial-gradient(circle at -10% 50%,red 0%, yellow 20%,black 50%,green 80%, yellow);
+        }
+```
+
+16.2、transform
+
+16.3、transform-origin
+
+16.4、多重变形
