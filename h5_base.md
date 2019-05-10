@@ -1180,8 +1180,68 @@ position：
         }
 ```
 
-16.2、transform
+## 16.2、transform
 
-16.3、transform-origin
+​	**transform属性用于实现平移、缩放、旋转和倾斜等2D变换。**
 
-16.4、多重变形
+### 16.2.1、**transform：translate（）；**
+
+​	translateX(x):元素仅在水平方向移动（X轴移动）
+
+​	translateY(y):元素仅在垂直方向移动（Y轴移动）
+
+### **16.2.2、transform：scale（）；**
+
+​	scaleX(x):元素仅在水平方向缩放
+
+​	scaleY(y):元素仅在垂直方向缩放
+
+​	scale(x,y)：绝对值大于1为放大，绝对值小于1为缩小。值为负数是，是对象的反转。
+
+### **16.2.3、transform：rotate（）；**
+
+​	正角度为顺时针旋转元素；负角度为逆时针旋转元素。
+
+### 16.2.4、transform：skew（）；
+
+​	skewX(x):元素仅在水平方向倾斜
+
+​	skewY(y):元素仅在垂直方向倾斜
+
+参数为负表示向相反方向倾斜。
+
+### 16.2.5、3D变形功能
+
+​	rotateX(angle):围绕X轴以给定的角度旋转
+
+​	rotateY(angle):围绕Y轴以给定的角度旋转
+
+​	rotateZ(angle):围绕Z轴以给定的角度旋转
+
+## 16.3、transform-origin
+
+​	**transform-origin属性更改变换的基点位置**
+
+​	默认情况下，元素基点位置为元素的中心点即x轴和Y轴的中心处
+
+​	CSS3变形进行的位移、缩放、旋转、倾斜都是以元素的基点进行变形。
+
+| 值     | 描述（默认为center，center）                      |
+| ------ | ------------------------------------------------- |
+| x-axis | 指定远点被置于X轴的可能位置  left\|center\|right% |
+| y-axis | 指定远点被置于X轴的可能位置 left\|center\|right%  |
+
+## 16.4、多重变形
+
+​	对同一元素可添加多种变形效果
+
+# 17、CSS3动画
+
+## 17.1、过度
+
+
+
+## 17.2、动画
+
+
+
