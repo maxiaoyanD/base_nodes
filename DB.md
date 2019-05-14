@@ -328,3 +328,25 @@ where not exists
 
 ```
 
+第八章
+
+```sql
+declare @var1 char(10),@var2 datetime
+set @var2=GETDATE()
+set @var1=convert(char(10),@var2)
+
+print @@VERSION--显示当前文本
+print @@SERVERNAME--显示服务器名称
+print @@servicename--显示目前所用服务器
+
+--查找201215121的学生
+if exists(select * from student where sno='201215121')
+	begin
+		select *
+		from student
+		where sno='201215121'
+	end
+else
+	print '没找到'
+```
+

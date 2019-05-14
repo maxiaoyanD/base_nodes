@@ -141,7 +141,77 @@ shell脚本的一些特殊变量
 | $?   | 上一个命令的返回值，通常在if中使用             |
 | $$   | 当前shell的PID                                 |
 
+# 15、Linux C编程基础
 
+## 15.1、程序的参数
 
+```c
+#include<stdio.h>
+#include<stdlib.h>
 
+int main(int argc,char * argv[]){
+    for(int i=0;i<argc;i++){
+        printf("%s\n",argv[i]);
+    }
+    return 0;
+}
+/*
+	根据argc输出每个参数，参数是通过argv传递的
+	argc是参数的个数，最小为1，因为argv[0]永远都是程序的名称。
+*/
+/*
+	程序返回值
+		程序最后的返回值为0表示争取
+		非0值表示程序出错。
+*/
+```
 
+## 15.2、验证返回值的脚本
+
+```c
+#!/bin/bash
+
+if ./bin/outr -r abcdef ; then
+	echo '[OK]'
+else
+    echo '[NOT OK]'
+if
+    
+echo ''
+
+if ./bin/outr -r 12345 -r ; then
+	echo '[OK]'
+else
+    echo '[NOT OK]'
+if
+/*
+	验证脚本和编译程序在同一目录。
+	在此目录有bin目录，编译好的程序都放在bin
+*/
+```
+
+## 15.3、获取PID
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+int main(int argc,char * argv[]){
+    printf("%d\n",getpid());
+    return 0;
+}
+/*
+	getpid调用可以获取进程自己的PID
+	getppid获取父进程的PID
+*/
+
+```
+
+## 15.4、创建子进程
+
+​	fork创建子进程
+
+fork返回值在父进程中返回子进程的PID，子进程中返回0
+
+父进程和子进程都执行fork之后，如果失败，fork调用返回-1
