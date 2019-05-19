@@ -328,13 +328,13 @@ where not exists
 
 ```
 
-第八章
+# 第八章
 
 ```sql
 declare @var1 char(10),@var2 datetime
 set @var2=GETDATE()
 set @var1=convert(char(10),@var2)
-
+--全局变量 @@开头
 print @@VERSION--显示当前文本
 print @@SERVERNAME--显示服务器名称
 print @@servicename--显示目前所用服务器
@@ -348,5 +348,80 @@ if exists(select * from student where sno='201215121')
 	end
 else
 	print '没找到'
+	
+```
+
+2019/05/15
+
+```sql
+begin
+    waitfor delay '00:00:05' --(或者换成time '00:52:15'具体的时间)
+        select *
+        from student
+end
+--数据类型装换
+
+--游标
+
+```
+
+## 第一节:T-SQL编程基础
+
+**1.标识符:**（**空格是什么。**。）
+
+​	字母或_、@、# 开头的字母数字或 _、@、$序列
+
+​	不与保留字相同
+
+​	长度小于128
+
+​	不符合规则的标识符需要加以界定(双引号“ ”，或方括号[])
+
+**2.变量**
+
+​	局部变量：用户定义，必须以@开头，在程序内部声明，并且只能在程序内部使用。
+
+​	局部变量声明：declare @<变量名> <数据类型> ====> declare @num int
+
+​	局部变量赋值：set |select @<变量名> = <表达式> ====> set @num = 1
+
+set赋值：一次只能赋值一个变量
+
+select赋值：一次赋值多个变量 select @a=1,@b=2....
+
+select也可以输出，select @a;或者print @a
+
+**3.类型转换**
+
+​	convert(char(2),@a)
+
+**4.全局变量**
+
+​	全局变量：以@@开头，不由用户定义，服务器定义的。
+
+**5.控制流程语句**
+
+```sql
+--1、选择结构
+--(1)、if ....else
+--查找有没有学号为201215121的学生，有的话显示学生信息，没有显示没找到
+if exists(select * from student where sno='201215121')
+begin
+	select *
+	from student
+	where sno='201215121'
+end
+else
+	print '没有找到'
+--(2)、case语句
+--从学生表student中，选取sno，ssex，如果ssex为男，则输出M，如果为女则输出F
+select sno,ssex=
+	case ssex
+	when '男' then 'M'
+	when '女' then 'F'
+	end
+from student
+--(3)、搜索式case
+
 ```
 
