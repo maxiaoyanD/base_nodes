@@ -328,6 +328,18 @@ where not exists
 
 ```
 
+# 第六章
+
+## 6.1、函数依赖
+
+​	函数依赖是一个关系内部属性与属性之间的一种约束关系。分为函数依赖FD和多值依赖MVD
+
+## 6.2、规范化
+
+设R(U)是一个属性集U上的关系模式，X和Y是U的子集若对于R(U)的任意一个可能的关系r，r中不可能存在两个元组在X上的属性值相等， 而在Y上的属性值不等， 则称 “X函数确定****Y****”** **或  “****Y****函数依赖于****X****”****，**记作X→Y。
+
+   **X**称为这个函数依赖的**决定属性集****(Determinant)****。**
+
 # 第八章
 
 ```sql
@@ -422,6 +434,55 @@ select sno,ssex=
 	end
 from student
 --(3)、搜索式case
+
+```
+
+```sql
+--标量函数
+--_、@、#  ()
+create function dateonly(@date datetime)
+returns varchar(12) --returns设置返回值类型
+as
+begin
+	return convert(varchar(12),@date,102)--这里为什么是102
+	--return设置返回值
+end
+print dbo.dateonly(getdate())
+
+--
+create function whichgeneration(@date datetime)
+returns varchar(10)
+as
+begin 
+	if year(@date)<1980
+		return 'too old'
+	else if year(@date)<1990
+		return '80s'
+	else
+		return '90s'
+	return ''--这里为什么有return
+end
+
+print dbo.whichgeneration('1999-12-07')
+
+--内嵌表值函数
+create function fun1()
+returns table 
+as
+return select sno,sname
+		from student
+select *
+from fun1()
+		
+--create function grade()
+--returns table
+--as
+--return select avg(grade) '计算机系平均成绩'
+--		from student,sc
+--		where sdept='CS' and student.sno=sc.sno
+		
+--select *
+--from grade()
 
 ```
 
