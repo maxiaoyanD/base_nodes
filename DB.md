@@ -434,6 +434,43 @@ select sno,ssex=
 	end
 from student
 --(3)、搜索式case
+--从SC表中查询所有同学选课成绩情况，凡成绩为空者输出‘未考’、小于60输出‘不及格’ 、小于70输出‘及格’ 、小于90输出‘良好’ 、大于等于90输出‘优秀’ 
+select sno,cno,grade=
+	case grade
+		when grade is null then '未考'
+		when grade<60 then '不及格'
+		when grade>=60 and grade<70 then '及格'
+		when grade>=70 and grade<90 then '良好'
+		when grade>=90 then '优秀'
+	end
+from sc
+
+--2、循环结构
+--求1-10的和
+declare @a int ,@sum int
+set @a=1
+set @sum=0
+while(@a<=10)
+	begin 
+		set @sum = @sum +@a
+		set @a=@a+1
+	end
+print 'sum=' +convert(char(2),@sum) --类型转换函数
+--等待语句
+	waitfor delay '<时间间隔>'|time '<时间>'
+	--时间间隔及时间均为datetime类型，格式为'hh:mm:ss'
+	waitfor delay "00:00:02"
+	begin
+    	select *
+    	from student
+	end
+--返回语句
+	--return语句用于无条件的终止一个查询、存储过程或者批处理。
+--日期和时间函数
+select '年龄'=
+	datediff(YY,'1999-12-07',getdate())
+--返回指定日期中的年/月/日的整数
+select year('2019-05-22');
 
 ```
 
