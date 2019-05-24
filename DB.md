@@ -336,9 +336,9 @@ where not exists
 
 ## 6.2、规范化
 
-设R(U)是一个属性集U上的关系模式，X和Y是U的子集若对于R(U)的任意一个可能的关系r，r中不可能存在两个元组在X上的属性值相等， 而在Y上的属性值不等， 则称 “X函数确定****Y****”** **或  “****Y****函数依赖于****X****”****，**记作X→Y。
+设R(U)是一个属性集U上的关系模式，X和Y是U的子集若对于R(U)的任意一个可能的关系r，r中不可能存在两个元组在X上的属性值相等， 而在Y上的属性值不等， 则称 “X函数确定Y 或  “Y函数依赖于X**”，**记作X→Y。
 
-   **X**称为这个函数依赖的**决定属性集****(Determinant)****。**
+   **X**称为这个函数依赖的**决定属性集**(Determinant)。
 
 # 第八章
 
@@ -413,7 +413,7 @@ select也可以输出，select @a;或者print @a
 
 **5.控制流程语句**
 
-```
+```SQL
 --1、选择结构
 --(1)、if ....else
 --查找有没有学号为201215121的学生，有的话显示学生信息，没有显示没找到
@@ -478,7 +478,7 @@ from student
 
 select sno+sname+convert(char(2),sage)
 from student
-SQL
+
 ```
 
 
@@ -487,7 +487,7 @@ SQL
 
 游标是一种能从包括多条数据记录的结果集中每次提取一条记录的机制
 
-```SQL
+```sql
 --统计没有选课程的学生的人数
 --1、声明游标
 declare num_cursor cursor 
@@ -524,18 +524,122 @@ select @num
 close num_cursor
 --5、释放游标
 deallocate num_cursor
+
+--根据学生成绩计算各个等级的人数
+declare level_cursor cursor
+for 
+	select grade from sc
+for read only
+
+open level_cursor
+
+declare @a int,@b int,@c int,@d int,@e int,@mygeade int
+select @a=0,@b=0,@d=0,@c=0,@e=0
+fetch next from level_cursor into @mygrade
+while @@fetch_status=0
+begin
+	if @mygrade is null
+		set @e=@e+1
+	else if @mygrade <60
+		set @e = @e+1
+	else if @mygrade<=70 and @mygrade>=60
+		set @d=@d+1
+	else if @mygrade<80 and @mygrade>=70
+		set @c=@c+1
+	else if @mygrade<90 and @mygrade>=80
+		set @b=@b+1
+	else if @mygrade>900
+		set @a=@a+1
+	fetch next from level_cursor into @mygrade
+end
+select @a 优秀,@b 良好,@c 中等,@d 一般,@e 不及格
+close level_cursor
+deallocate level_cursor
 ```
-
-
 
 ## 第三节：存储过程
 
-## 第四节：自定义函数
+​	存储过程是一组完成特定功能的SQL语句集，经编译后存储在数据库中，用户通过指定存储过程的名字并给出参数（如果该存储过程带有参数）来执行存储过程。
 
 ```sql
+--1、 创建存储过程
+--从sc中查询不及格课程超过三门的学生信息 *******没有参数
+create proc num
+as
+select *
+from student
+where son in(
+	select sno
+    from sc
+    where grade<60
+    groun by sno
+    having count(sno)>3
+)
+--将指定记录插入到student表  ********************有参数
+create proc proc_insert_student
+@sno varchar(10),
+@sname varchar(20),
+@ssex char(2)='男',--*********设置默认值
+@sage smallint,
+@sdept varchar(5)
+as
+begin
+	insert into student(sno,sname,ssex,sage,sdept)
+	values('201215129','边白白','女',19,'CS')
+end
+--查询指定学号学生的平均成绩，并将成绩返回
+create proc mygrade
+@sno varchar(10),
+@grade int out  -- *********************************设置输出型参数
+as
+begin 
+	select grade
+	from sc
+	where sno=@sno
+end
 
---标量函数
---_、@、#  ()
+declare @sn int(10)
+set @sn=0
+exec mygrade '201215129',@sn out
+select @sn
+
+--请编写一个存储过程proc_sum，输入参数为学院，输出参数为人数，功能为根据输入的学院，统计该学院的学生人数，并返回学生人数。学生表的结构为（sno,sname,sex,department）各个字段含义为学号、姓名、性别、学院
+create proc proc_num
+@sdept varchar(5),
+@num int out
+as
+begin 
+	select @num=count(sno)
+	from student
+	where sdept=@sdept
+end
+
+declare @num int
+set @num =0
+exec proc_num 'CS',@num out
+select @num
+--2、执行存储过程
+declare @num int
+set @num =0
+exec proc_num 'CS',@num out
+select @num
+
+--3、删除存储过程
+drop proc proc_num
+```
+
+## 第四节：自定义函数
+
+标量函数返回一个标量(单值)结果
+
+内嵌表值函数返回一个table数据类型
+
+多语句表值函数返回的数据必须存放于临时表中（性能不好）
+
+```sql
+--1、标量函数
+--标量函数返回一个标量的结果
+--定义一个函数返回不带时间的日期
 create function dateonly(@date datetime)
 returns varchar(12) --returns设置返回值类型
 as
@@ -556,12 +660,13 @@ begin
 		return '80s'
 	else
 		return '90s'
-	return ''--这里为什么有return
+	return ''--******************************
 end
 
 print dbo.whichgeneration('1999-12-07')
 
---内嵌表值函数
+--2、内嵌表值函数
+
 create function fun1()
 returns table 
 as
