@@ -413,7 +413,7 @@ select也可以输出，select @a;或者print @a
 
 **5.控制流程语句**
 
-```sql
+```
 --1、选择结构
 --(1)、if ....else
 --查找有没有学号为201215121的学生，有的话显示学生信息，没有显示没找到
@@ -472,9 +472,68 @@ select '年龄'=
 --返回指定日期中的年/月/日的整数
 select year('2019-05-22');
 
+--数据类型转换
+select sno+sname+cast(sage as char(2))
+from student
+
+select sno+sname+convert(char(2),sage)
+from student
+SQL
 ```
 
+
+
+## 第二节：游标
+
+游标是一种能从包括多条数据记录的结果集中每次提取一条记录的机制
+
+```SQL
+--统计没有选课程的学生的人数
+--1、声明游标
+declare num_cursor cursor 
+for
+	select sno
+	from student
+for read only
+--2、打开游标
+open num_cursor
+--3、读取游标中的数据
+--fetch (默认指针指向第一条记录之前)
+--next :返回结果的当前行的下一行
+--prior：但会当前结果的前一行
+--first：返回游标中的首个记录
+--last：返回游标中的最后一个记录
+--absolute：是绝对位置，他将指针移到第n行位置
+--relative：如果n是正数则为当前位置之后的第n歌位置，为负则为当前位置向前            的第n个位置
+--into：允许将使用fetch语句读取的数据存放在若干个局部变量中，在变量行中的         每个变量必须与游标结果集中相应的列相对应。
+--执行fetch语句后，可通过@@fetch_status全局变量返回游标当前的状态。
+--@@fetch_status =0 ：fetch语句执行成功
+               --=-1：fetch语句指向失败或数据超出范围
+               --=-2：提取数据不存在
+declare @sno varchar(9),@num int 
+set @num=0
+fetch next from num_cursor into @sno
+while @@fetch_status=0
+begin
+	if not exists(select * from student where sno=@sno)
+       set @num = @num+1
+    fetch next from  num_fetch into @sno
+end
+select @num
+--4、关闭游标
+close num_cursor
+--5、释放游标
+deallocate num_cursor
+```
+
+
+
+## 第三节：存储过程
+
+## 第四节：自定义函数
+
 ```sql
+
 --标量函数
 --_、@、#  ()
 create function dateonly(@date datetime)
