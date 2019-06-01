@@ -8,7 +8,7 @@ dbo ----- 系统默认架构
 
 至少有或者查询全部 用÷
 
-# 3、关系数据库标准语言
+# 第三章、关系数据库标准语言
 
 学生表：Student(Sno,Sname,Ssex,Sage,Sdept)
 
@@ -585,8 +585,9 @@ create proc proc_insert_student
 as
 begin
 	insert into student(sno,sname,ssex,sage,sdept)
-	values('201215129','边白白','女',19,'CS')
+	values(@sno,@sname,@ssex,@sage,@sdept)
 end
+exec proc_insert_student('')
 --查询指定学号学生的平均成绩，并将成绩返回
 create proc mygrade
 @sno varchar(10),
@@ -685,5 +686,88 @@ from fun1()
 --select *
 --from grade()
 
+```
+
+## 第五节：触发器
+
+```sql
+--1、insert触发器
+create trigger tr_sc_grade
+on sc
+after inster
+as
+begin
+	declare @score smallint
+	select rroe@score=grade from inserted
+	if(@score>100 or @score<0)
+		begin
+			raiserror('成绩必须在0和100之间',10,1)
+			--delete from sc where grade=@score
+			rollback transaction --回滚事务
+		end
+end
+
+
+--2、update触发器
+create trigger tr_student_update
+on student
+for update
+as
+begin
+	select * 
+	from insterted
+end
+
+update student
+set sname='pcy'
+where sname='hhh'
+
+--3、delete触发器
+create table s1
+(
+	sno char(9),
+    sname char(9)
+    grade smallint
+);
+create trigger tr_sc-delete
+on sc
+for delete
+as
+begin
+	inster into s1
+	select *
+	from deleted
+end
+
+
+```
+
+
+
+```sql
+--1、
+create function funbook(@类别名 char(9))
+returns table
+as
+	return 
+		select 图书.* 
+		from 图书,图书类别
+		where 图书.类别编号 = 图书类型.类别编号 and 图书类型.类比名=@类别名
+
+--2、
+create trigger TrInsUpd
+on 图书
+for insert,update
+as
+begin
+	declare @类别编号 char(9)
+	select @类别编号=类别编号
+	from inserted
+	if not exists(select * from 图书类别 where 类别编号=@类别编号 )
+        begin 
+        	raiserror('图书类别号不存在')
+        	rollback transaction
+        end
+end
 ```
 

@@ -1245,3 +1245,135 @@ position：
 
 
 
+# 21、Bootstrap概览及栅格系统
+
+​	Bootstrap基于html、css、JavaScript，响应式。
+
+​	引用Bootstrap之前必须先引用jQuery
+
+Bootstrap包含：基本结构、CSS、组件、JavaScript插件、定制
+
+## 21.1、Bootstrap CSS概览
+
+1.全局设置：
+
+​	Bootstrap使用了html5元素和css属性，必须使用html5文档类型
+
+2.移动设备优先：
+
+​	为确保适当的绘制和触屏缩放，需要在<head>之中添加viewport元素数据标签。
+
+​	•设备上的 viewport 指设备的屏幕上**能用来显示网页的那一块区域**。
+
+​	•添加 viewport 元数据标签可**确保适当的绘制和触屏缩放**。
+
+```html
+<meta name="viewport" content="width=device-width,initial-scale=1">
+```
+
+| 属性                 | 含义                         |
+| -------------------- | ---------------------------- |
+| width=device-width   | 表示宽度是设备屏幕的宽度     |
+| initial-scale=1.0    | 表示初始的缩放比例           |
+| minimum-scale=0.5    | 表示最小的缩放比例           |
+| maximum-scale=2.0    | 表示最大的缩放比例           |
+| user-scalable=yes/no | 表示用户是否可以调整缩放比例 |
+
+3.排版与链接
+
+Bootstrap排版、链接样式设置了基本的全局样式。分别是：
+
+•为 body 元素设置 background-color: #fff;
+
+•使用 @font-family-base、@font-size-base 和 @line-height-base a变量作为排版的基本参数
+
+•为所有链接设置了基本颜色 @link-color ，并且当链接处于 :hover 状态时才添加下划线
+
+4.布局容器
+
+​	container类、container-fluid类用于包裹页面上的内容。
+
+​	container 类用于固定宽度并支持响应式布局的容器。
+
+​      . container-fluid 类用于 100% 宽度，占据全部视窗的容器。
+
+```html
+<style>
+	.container{
+			background-color:red;/*只显示也中间*/
+			height:30px;
+	}
+	.container-fluid{
+			background-color:blue;/*显示在整个宽度内*/
+			height:50px;
+	}
+    @media (min-width: 1200px)
+		.container {
+    		width: 1170px;
+		}
+@media (min-width: 992px)
+		.container {
+   		 	width: 970px;
+		}
+/*两嵌套个容器类不能相互*/
+</style>
+```
+
+## 21.2、栅格系统
+
+​	Bootstrap提供了一套响应式、移动设备有限的流式栅格系统，随着屏幕或视窗尺寸的增加，系统会自动分为最多12列。
+
+```html
+/*************基本栅格：row col-md-****************/
+<div class="container">
+    <div class="col">
+        <div class="col-md-4"></div>
+        <div class="col-md-8"></div>
+    </div>
+</div>
+<--!注意-->
+<--!
+1、行（row）必须要包含在容器（container）之内。
+2、使用行（row）在水平方向创建一组列（col）。
+3、内容应当放置于列内，而且，只有列可以作为行的直接子元素。
+4、类似.row 和.col-md-4 这些预定义的栅格类可用来快速创建栅格布局。
+5、通过设置 padding 创建列之间的间隔。
+6、栅格系统中的列是通过指定1到12的值来表示其跨越的范围。例如，三个等宽的列可以使用三个.col-md-4来创建。
+7、如果一“行（row）”中包含了的“列（col）”大于 12，多余的列所在的元素将被作为一个整体另起一行排列。
+-->
+类前缀		col-xs-		col-sm-		col-md-		col-lg-
+对应屏幕   超小屏幕		小屏幕 平板	 中等屏幕	   大屏幕 大桌面
+/*************偏移列：col-md(xs\sm\lg)-offset-************/
+    <将列向右侧偏移。本质是为当前元素增加左侧的边距；>
+    <col-md-offset-4:是将col-md-4向右侧偏移4个列的宽度>
+/*************列嵌套：在已有的col-md-*中添加新的row**********/
+	<在已有的col-md-*中添加新的row并加入col-md-*> 
+    <container不能嵌套，嵌套列所包含的列加起来不能超过12列>
+/*************列排序：col-md-push-*、col-md-pull-********/ 
+    <push是放在后面、pull是放在前面>
+<div class="row"> 
+    <div class="col-md-9 col-md-push-3">.col-md-9 .col-md-push-3</div> 
+    <div class="col-md-3 col-md-pull-9">.col-md-3 .col-md-pull-9</div> 
+</div>
+```
+
+# 22、Bootstrap 全局CSS(一)
+
+## 22.1、文字排版
+
+1. 内联子标题
+2. 页面主题
+3. 主体副本
+4. 内联文本元素
+5. 文本对齐
+6. 改变大小写
+7. 缩写
+8. 文本强调（文本颜色）
+9. 文本背景颜色
+10. 列表
+11. 内联列表
+12. 自定义列表
+
+22.2、代码
+
+22.3、图片
