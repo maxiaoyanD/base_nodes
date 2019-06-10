@@ -1362,17 +1362,114 @@ Bootstrap排版、链接样式设置了基本的全局样式。分别是：
 ## 22.1、文字排版
 
 1. 内联子标题
+
+   在标题内可以包含<small>标签或.small元素，来标记副标题
+
+   ```html
+   <h1> 我真的好<small>漂亮<small></h1>
+   ```
+
 2. 页面主题
+
+   Bootstrap将全局font-size设置为14px，line-height为1.428。这些属性直接赋给了<body>和所有段落元素
+
+   p元素被设置了等于1/2行高的地步外边距（10px）
+
 3. 主体副本
+
+   通过添加.lead可以让段落更强调的突出显示。
+
+   ```html 
+   <p class="lead">jjjj</p>
+   ```
+
 4. 内联文本元素
+
+   1. 标记文本 <mark></mark>
+   2. 被删除的文本<del></del>
+   3. 无用的文本 <s></s>
+   4. 额外插入的文本 <ins></ins>
+   5. 带下划线的文本 <u></u>
+   6. 小号文本<small></small>
+
 5. 文本对齐
+
+   class="text-left" 	文本左对齐
+
+   class="text-right"	文本右对齐
+
+   class="text-center"     文本中对齐
+
+   class="text-justify"      文本两端对齐
+
+   class="text-nowrap"    禁止文本换行
+
 6. 改变大小写
+
+   class="text-lowercase"	转换成小写
+
+   class="text-uooercase"       转换成大写
+
+   class="text-capitalize"	 首字母大写
+
 7. 缩写
+
+   外观表现为文本底部的虚线框，鼠标移至上面时会变成带有“问号”的指针。当鼠标悬停在上面时会显示完整的文本（需要为 <abbr>的 title属性添加文本）
+
+   ```html
+   <abbr title="Woeld Wide Web">WWW</abbr>万维网
+   ```
+
 8. 文本强调（文本颜色）
+
+   .text-muted：提示，使用浅灰色（#999）
+
+   .text-primary：主要，使用蓝色（#428bca）
+
+   .text-success：成功，使用浅绿色(#3c763d)
+
+   .text-info：通知信息，使用浅蓝色（#31708f）
+
+   .text-warning：警告，使用黄色（#8a6d3b）
+
+   .text-danger：危险，使用褐色（#a94442）
+
 9. 文本背景颜色
+
+   ```html
+   <p class="bg-primary">...</p>
+   <p class="bg-success">...</p>
+   <p class="bg-info">...</p>
+   <p class="bg-warning">...</p>
+   <p class="bg-danger">...</p>
+   /*链接组件，鼠标经过时，颜色会加深*/
+   ```
+
 10. 列表
+
+    Bootstrap 支持有序列表、无序列表和定义列表。
+
+    有序列表：有序列表是指以数字或其他有序字符开头的列表。
+
+    无序列表：无序列表是指没有特定顺序的列表。
+
+    如果不想显示列表项符号，使用 class .list-unstyled来移除样式
+
 11. 内联列表
+
+    通过引用.list-inline将所有列表项放置于同一行
+
 12. 自定义列表
+
+    <dl> 标签定义了自定义列表。
+
+    Ø每个列表项可以包含 <dt> 和 <dd> 元素。
+
+    Ø<dt> 定义列表中的项目。
+
+    Ø<dd> 描述列表中的项目。
+
+    .dl-horizontal 可以让 <dl> 内的**短语及其描述排在一行**。
 
 22.2、代码
 

@@ -1084,11 +1084,146 @@ for(var k in obj){
 
 
 
+# 28、ES6中变量的解构赋值
 
+## 28.1、数组的解构赋值
 
+```javascript
+//先进行解构解析在进行赋值
+var [a,b,c]=[1,2,3];
+console.log(a,b,c);//1 2 3
 
+//let 也支持解构赋值
+let [foo,[[bar],baz]]=[1,[[2],3]];
+console.log(foo,bar,baz);//1 2 3
+/*
+	...变量表示剩余的所有，其他元素匹配完成后剩余的元素
+*/
+let [head,...tail]=[1,2,3,4];
+console.log(head,tail);//1 [2,3,4]
+/*
+	左侧元素多余右侧元素
+	未匹配到的变量为undefined
+	...跟的变量未匹配到的元素为[空数组]
+*/
+let [d,e,...f] = ['a'];
+console.log(d,e,f);//a undefined []
 
+var [doo2] = [];
+var [bar,fee2]=[1];
+console.log(doo2,fee2);//undefined undefined
+/*嵌套情况也是先解析在进行匹配*/
+let [a2,[b2],d2]=[1,[2,3],4];
+console.log(a2,b2,d2);//1  2 4
 
+//？？？？？？？？？？？？？？？？？
+let a = [];
+let b = [2,3,4];
+[a[0],a[1],a[2]]=b;
+console.log(a==b);//false
+console.log(a);//2 3 4
 
+let a = [];
+let b=[2,3,4];
+a = b;
+console.log(a == b);//true
+```
 
+## 28.2、对象的解构赋值
+
+```javascript
+//对象的解构与数组有一个重要的不同
+/**
+ * 数组的元素是按次序排列的，变量的取值由它的位置决定
+ * 而对象的属性没有次序，变量必须与属性同名，才能取到正确的值
+ */
+var {bar2,foo2}={foo2:"hh",bar2:"kk"};
+console.log(foo2,bar2);
+
+var {baz3} = {foo3:"lll",bar3:"ggg"};
+console.log(baz3);//undefined
+
+//左为键值对时，注意键值对赋值时的对应关系
+var {foo4:baz4} = {foo4:"aaa",baz4:"bbb"};
+console.log(baz4);//aaa
+
+let obj1 = {first:'hello',last:'world'};
+let {first:f,last:l} = obj1;
+console.log(f,l); //hello world
+//两种写法不一样但是结果一样
+let{first,last} = obj1;
+console.log(first,last);//hello world
+
+//这实际上说明：对象的解构赋值的是下面形式的简写
+var {foo5:foo5,bar5:bar5} = {foo5:"ddd",bar5:"kkk"};
+//也就是说：对象的解构赋值的内部机制，是先找到同名属性，
+//然后再付给对应的变量。真正被赋值的是后者而不是前者
+var {foo6:bcd} = {foo6:"his",bcd:"kdjo"};
+console.log(bcd);//"his"
+console.log(foo6);//报错 foo6 is not a defined
+//也就是被赋值的是bcd而不是foo6
+
+//对象的解构也可以指定默认值。
+var {x2 = 3} = {};
+console.log(x2); // 3
+
+var {x3, y3 = 5} = {x3: 1};
+console.log(x3); // 1
+console.log(y3); // 5
+```
+
+## 28.3、字符串的解构赋值
+
+```javascript
+//类似数组的对象都有一个length属性，因此还可以对这个属性解构赋值
+let {length:len} = 'hello';
+console.log(len);//5
+
+//解构赋值的时候，如果等号右边是数值和布尔值，则会先转为对象。
+let {toString:s1} = 123;
+console.log(s1);//ƒ toString() { [native code] }
+
+let {toString:s2} = true;
+console.log(s2);//ƒ toString() { [native code] }
+
+//数值和布尔值的包装对象都具有toString属性，因此变量s都能取到值
+//解构赋值的规则是，只要等号右边不是对象，就先将其转换为对象在进行解构赋值
+//由于undefined和null无法转换为对象，所以对他们进行解构赋值，都会报错
+
+let {prop:x}=undefined;
+let {prop:y} = null;
+```
+
+## 28.4、函数的解构赋值
+
+```javascript
+function add([x,y]){
+    return x+y;
+}
+add([1,2]);//3
+
+[[1,2],[3,4]].map(function([a,b]){return a+b;})
+// [3,7] ===>1+2 3+4
+
+//函数参数的解构也可以使用默认值，
+function move1({x=0,y=0}={}){
+    return [x,y];
+}
+console.log(mov1({x:3,y:4}));//[3,4]
+console.log(move1({x: 3})); // [3, 0]
+console.log(move1({})); // [0, 0]
+console.log(move1()); // [0, 0]
+
+//注意，下面的写法会得到不一样的结果。
+function move2({x, y} = { x: 0, y: 0 }) {
+    return [x, y];
+}
+console.log(move2({x: 3, y: 8})); // [3, 8]
+console.log(move2({x: 3})); // [3, undefined]
+console.log(move2({})); // [undefined, undefined]
+console.log(move2()); // [0, 0]
+//上述代码是函数move2的参数指定默认值，而不是为变量x和y指定默认值，所以会得到与之前不一样的的结果
+
+//undefined就会触发函数参数的默认值
+```
 
