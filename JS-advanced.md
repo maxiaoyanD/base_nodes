@@ -1,4 +1,4 @@
-# 一、概述
+# 1、概述
 
 1. git网址：https://github.com/edu2act/course-javascript-advanced
 
@@ -18,7 +18,7 @@
 
 6. JavaScript是一种直译式脚本语言
 
-# 二、JS数据类型、值与类型转换
+# 2、JS数据类型、值与类型转换
 
 ## 1、存储过程
 
@@ -94,7 +94,7 @@ var strObject = new String(str1);
 strObject.substr(0,2);
 ```
 
-# 三、基本（原始）数据类型进阶
+# 3、基本（原始）数据类型进阶
 
 ## 3.1、Number进阶
 
@@ -230,9 +230,9 @@ str4.localeCompare('啦');
 
 **所有对象都是真值**
 
-# 四、JS语法、表达式及语句
+# 4、JS语法、表达式及语句
 
-4.1、JS语法、表达式及语句综述
+## 4.1、JS语法、表达式及语句综述
 
 4.1.1、字面量
 
@@ -240,7 +240,11 @@ str4.localeCompare('啦');
 
 4.1.3、表达式与语句
 
-# 五、JS赋值、算数、关系运算符
+## 4.2、JS严格模式
+
+## 4.3、switch详解、for....in
+
+# 5、JS赋值、算数、关系运算符
 
 ## 5.1、JS赋值运算符
 
@@ -324,7 +328,7 @@ console.log({} === {});//false
 
 
 
-# 六、JS逻辑运算符进阶
+# 6、JS逻辑运算符进阶
 
 ## 6.1、&&与||的基本理解应用
 
@@ -413,7 +417,7 @@ console.log(sum(1,0,0));
 // ==> 1 + 0 + 0 ==> 1
 ```
 
-# 七、JS函数及函数参数
+# 7、JS函数及函数参数
 
 ## 7.1、函数的定义与调用
 
@@ -613,7 +617,13 @@ console.log(sum(1));//10
  console.trace("obj.x:",obj.x);//3
 ```
 
-# 8、
+# 8、JS函数对象
+
+## 8.1、函数对象
+
+## 8.2、函数对象的属性及方法
+
+## 8.3、高阶函数
 
 # 9、JS预解析
 
@@ -1078,11 +1088,105 @@ for(var k in obj){
 
 ## 14.3、对象访问器属性的特性
 
-
-
 ## 14.4、特性描述符及补充
 
+# 15、JS原型继承
 
+## 15.1、JS对象及继承方式综述
+
+## 15.2、JS对象的原型链
+
+## 15.3、基于构造函数实现的原型继承
+
+# 16、JS中的this
+
+## 16.1、JS this简介及特点
+
+## 16.2、JS this四种应用场景
+
+## 16.3、JS this缺陷及解决方法
+
+# 17、深入理解JS的继承方式
+
+## 17.1、JS对象-对象原型继承
+
+## 17.2、通过构造函数模拟类-类的继承
+
+## 17.3、JS继承补充
+
+# 18、Array数组
+
+## 18.1、数组的创建和基本操作
+
+## 18.2、稀疏数组与多维数组
+
+## 18.3、数组的方法和相关高阶数组
+
+# 19、Date日期
+
+## 19.1、Date简介及创建Date对象
+
+## 19.2、Date方法（静态方法、原型方法）
+
+## 19.3、日期和时间格式
+
+# 20、RegExp正则表达式
+
+## 20.1、正则表达式简介及正则对象
+
+## 20.2、RegExp及String相关的正则方法
+
+## 20.3、正则表达式应用案例
+
+# 21、Error及异常处理
+
+## 21.1、JS异常处理
+
+## 21.2、Error对象及其子对象
+
+# 22、Math对象
+
+# 23、JSON对象
+
+## 23.1、JSON简介
+
+## 23.2、JSON对象方法
+
+## 23.3、JSON案例
+
+# 24、jQuery核心
+
+## 24.1、jQuery简介
+
+## 24.2、jQuery选择器
+
+## 24.3、jQuery时间
+
+## 24.4、jQuery DOM操作
+
+#  25、JS事件及事件流
+
+## 25.1、JS事件及事件对象
+
+## 25.2、JS事件响应
+
+## 25.3、JS事件流（冒泡、捕获）
+
+# 26、JS异步与网络数据交互
+
+## 26.1、JS异步相关概念
+
+## 26.2、JS异步的几种形式
+
+## 26.3、JS异步与数据交互
+
+# 27、ES6中的let和count
+
+## 27.1、ES5中的var及其缺陷
+
+## 27.2、ES6中的let与const
+
+## 27.3、let与const的重要特性
 
 # 28、ES6中变量的解构赋值
 
@@ -1227,3 +1331,122 @@ console.log(move2()); // [0, 0]
 //undefined就会触发函数参数的默认值
 ```
 
+
+
+# 29、ES6对内置对象的扩展
+
+## 29.1、ES6对String和RegExp的扩展
+
+1.对String的扩展
+
+```javascript
+//ES6提供了字符串的遍历接口（for...of循环遍历）
+for(let x of "foo"){
+    console.log(x);
+}// f o o
+/*
+	startsWith():以什么开始
+	endsWith():以什么结尾
+	includes():包含什么
+*/
+//提供新的方法用于查找、判断和生成字符串
+var s = "Hello World!";
+s.startsWith("Hello");//true
+s.endsWith("!");//true
+s.includes("o");//true
+//第二个参数，表示开始搜索的位置
+s.startsWith('world', 6); // true
+s.endsWith('Hello', 5); // true
+s.includes('Hello', 6); // false
+
+/*
+	repeat方法返回一个新的字符串，将原字符串重复n次
+	如果参数是小数会被取整
+	如果参数是负数或者是Infinity，会报错
+*/
+'x'.repeat(3);//'xxx'
+'nihao'.repeat(2.5);//'nihaonihao'
+'hh'.repeat(-1);//RangeError
+'na'.repeat(Infinity);
+```
+
+2.对RegExp的扩展
+
+```javascript
+//在ES5中，RegExp构造函数有两种
+//1、第一个参数是字符串，第二个参数是正则表达式的修饰符
+var reg1 = new RegExp('xyz','i');
+//=====>等价于
+var reg1 = /xyz/i;
+
+//2、参数是一个正则表达式，这时返回一个原有正则表达式的拷贝
+var reg1 = new RegExp(/exy/i);
+//=====>等价于
+var reg1 = /exy/i;
+//这种情况ES5不允许加修饰符，会报错
+var reg1 = new RegExp(/xyz/,'i');
+
+//ES6改变了这个行为。
+//如果RegExp构造函数第一个参数是正则对象，那么第二个参数可以指定修饰符
+//而且，返回正则表达式会忽略原来的修饰符,并用flags返回修饰符
+    /* 正则表达式对象.flags获取到正则表达式修饰符 */
+new RegExp(/xyz/ig,'i').flags;//'i'
+
+//粘连sticky修饰符
+/* sticky y修饰符 他会从上一次匹配成功的结束位置开始匹配*/
+var s = 'aaa_aa_a';
+var r1 = /a+/g;
+var r2 = /a+/y;
+r1.exec(s); // ["aaa"]
+r2.exec(s); // ["aaa"]
+r1.exec(s); // ["aa"]
+r2.exec(s); // null
+//g修饰符匹配没有位置要求，但是y必须从头开始
+
+// ES5的source属性
+// 返回正则表达式的正文
+/abc/ig.source
+// "abc"
+```
+
+## 29.2、ES6对Number和Math的扩展
+
+##  29.3、ES6对Array和Object的扩展
+
+# 30、ES6对函数的扩展
+
+## 30.1、ES6新增的箭头函数
+
+## 30.2、ES6 对函数参数默认值的扩展
+
+## 30.3、ES6中Reat与Spread操作符
+
+# 31、ES6新增数据类型和数据结构
+
+## 31.1、新增数据类型（Symbol）
+
+## 31.2、新增数据结构（Set）
+
+## 31.3新增数据结构（Map）
+
+# 32、Class综述
+
+## 32.1、ES6Class基本预防
+
+## 32.2、ES6Class静态方法、静态属性
+
+## 32.3、ES6 Class的继承
+
+# 33、Promise与异步编程
+
+## 33.1、Promise概念与语法
+
+## 33.2、Promise 原型方法及静态方法
+
+## 33.3、Promise综合案列
+
+# 34、ES6补充部分
+
+## 34.1、ES6迭代器与生成器
+
+## 34.2、ES6模块化开发
