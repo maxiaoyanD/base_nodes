@@ -337,11 +337,35 @@
 
 ​	max/min/step属性：设置最大/小值/数值或日期时间的增量。
 
-​	
-
 # 4、地理位置定位
 
-## 4.1、HTML5获取当前地理位置
+## 4.1、Geolocation API
+
+**HTML5 GeolocationAPI不指定设备使用哪种底层技术来定位使用应用程序的用户，它只是用于检索位置信息的API**
+
+geolocation 对象，此对象为navigator对象的一个属性
+
+**Geolocation API 存在于navigator对象中，包含 3 个方法：**
+
+**（1）getCurrentPosition(onSuccess, onError,options)    //获取当前地理位置**
+
+参数1：获取数据成功后执行的回调函数，使用 Position 对象作为唯一的参数
+
+参数2（可选）：获取数据失败时执行的回调函数，使用 PositionError 对象作为唯一的参数
+
+参数3 （可选）：可选参数列表，可通过该对象参数设定最长可接受的定位返回时间、等待请求的时间和是否获取高精度定位
+
+**（2）watchPosition(onSuccess, onError,options)     //持续监视当前地理位置**
+
+监测用户位置，位置发生改变时即调用成功回调函数
+
+**（3）clearWatch()                    //清除监视**
+
+该方法会返回一个 ID，如要取消监听可以通过  clearWatch(watchId) 传入该 ID 实现取消的目的。
+
+## 4.2、HTML5获取当前地理位置
+
+
 
 4.1.1、getCurrentPosition(onSuccess,onError,options)
 
