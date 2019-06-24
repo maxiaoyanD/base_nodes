@@ -1021,7 +1021,7 @@ save()把当前状态的一份拷贝压入到一个保存图像状态的栈中�
 | ------------------------------------- | ------------------------------------------------------------ |
 | fillText(text,x,y,maxWidth)           | 在画布上绘制填色的文本。文本的默认颜色是黑色。                                                                         text      规定在画布上输出的文本                                 x —文本的x坐标位置(相对于画布)      y  —开始绘制文本的y坐标位置                            maxWidth 可选。允许的最大文本宽度，像素 |
 | font                                  | 设置画布上文本内容的当前字体属性                          context.font="italic 35px 微软雅黑" |
-| strokeText(text,x,y,maxWidth)         | 绘制描边文字。                                                        text —规定在画布上输出的文本                        x      —开始绘制文本的x坐标位置                       y      —开始绘制文本的y坐标位置                       maxWidth 可选。允许的最大文本宽度 |
+| strokeText(text,x,y,maxWidth)         | 绘制描边文字。                                                                                     text —规定在画布上输出的文本                                                              x      —开始绘制文本的x坐标位置                                                            y      —开始绘制文本的y坐标位置                                                       maxWidth 可选。允许的最大文本宽度 |
 | measureText(text)                     | 返回一个对象，该对象包含以像素计的指定字体宽度               |
 | textAlign（center\|end\|left\|right） | 根据锚点，设置文本内容的当前对齐方式（水平对齐）             |
 | textBaseline(top\|middle\|bottom)     | 根据锚点，设置在绘制文本时的当前文本基线（垂直对齐）         |

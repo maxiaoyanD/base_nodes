@@ -621,9 +621,132 @@ console.log(sum(1));//10
 
 ## 8.1、函数对象
 
+函数对象对应的类型是Function（类似于数组对象对应于Array、日期对象对应于Date）
+- 如果变量是函数（函数对象）时，typeof此对象，返回function，而非object
+- 内置的函数对象（Array、Function、Date等），内置的非函数对象（Math、JSON）
+
+```javascript
+//对象 instanceof 构造对象
+//所有的对象instanceof Object结构都为true
+//Math 、JSON不是函数不能实例化对象
+//instanceof运算符用于测试构造函数的prototype属性是否出现在对象的原型链中的任何位置
+	//1、判断这个对象能否使用后面的构造函数实例化得到
+    //2、判断能否在对象的原型链上找到构造函数的prototype
+function Person(username,age){
+        this.username = username;
+        this.age = age;
+    }
+    var person = new Person("zhangs",18);
+    person instanceof Person;//true
+    console.log(person);
+    //每个对象都有一个这个属性构成一个链
+    //__proto__: Object
+    console.log(person.__proto__ == Person.prototype);
+    //判断能否在person的原型链上找到Object构造函数的prototype
+/**********
+console.log(person.__proto__ == Object.prototype);
+	person.__proto__ == Person.prototype //true
+    person.__proto__.__proto__ == Person.prototype.__proto__ //true
+    Person.prototype.__proto__ == Object.prototype//true
+*/
+```
+
 ## 8.2、函数对象的属性及方法
 
+### 8.2.1、函数对象的属性
+
+​	length（传入的行参的个数）、argument（传入的实参的个数）
+
+```javascript
+caller：如果一个函数`f`是在全局作用域内被调用的,则`f.caller为``null`,相反,如果一个函数是在另外一个函数作用域内被调用的,则`f.caller指向调用它的那个函数.`
+function fn2(){
+        console.log(fn2.caller);//返回fn3()函数
+    }
+function fn3(){
+        fn2();
+    }
+    fn3();
+function fn1(){
+    console.log(fn1.caller);//null
+}
+fn1();
+/*************************callee****************************/
+arguments.callee:常用于匿名递归函数，递归的调用自身
+var func = function(n){
+    if (n <= 0)
+        return 1;
+    else
+        return n * func(n - 1);
+        //return n * arguments.callee(n - 1);
+    };
+    console.log(func(4));
+```
+
+​	prototype
+
+### 8.2.2、函数对象的方法
+
+​	call、apply
+
+```javascript
+/****************************call、apply*********************/
+对象A.方法.call(对象B)：切换对象
+apply和call的用法相同
+var objA = {"objName":"AAA"};
+    var objB = {"objName":"BBB"};
+    objA.foo = function(){
+        console.log(this.objName);
+    }
+    objA.foo();//AAA
+    //对象.方法.call(对象):切换对象
+    objA.foo.call(objB);//BBB
+/************************bind****************************/
+方法创建一个新的函数，在调用时设置this关键字为提供的值。并在调用新函数时，将给定参数列表作为原函数的参数序列的前若干项。
+var objM = {
+        "name":"aaa",
+        "foo":function(){
+            console.log(this.name);
+        }
+    }
+    var objN = {"name":"nnn"};
+    var foo2 = objM.foo.bind(objN);
+    foo2();//nnn
+/***********例子***************/
+var module = {
+  x: 42,
+  getX: function() {
+    return this.x;
+  }
+}
+
+var unboundGetX = module.getX;
+console.log(unboundGetX()); // The function gets invoked at the global scope
+// expected output: undefined
+
+var boundGetX = unboundGetX.bind(module);
+console.log(boundGetX());
+// expected output: 42
+/*********************************************************/
+valueOf()方法返回指定对象的原始值。
+```
+
 ## 8.3、高阶函数
+
+```javascript
+    var obj = {x:30};
+    function f1(){
+        function f2(){
+            console.log(this.x);
+        }
+        return f2;
+    }
+    obj.f3 = f1;
+    obj.f4 = f1();//f4赋值的是f1()执行的结果及f2函数
+    obj.f3();
+    obj.f4();//f4()执行的结果就是f2()执行的结果
+
+    //函数多层嵌套，this没有穿透
+```
 
 # 9、JS预解析
 
@@ -640,7 +763,7 @@ console.log(sum(1));//10
 
 ### 9.2.1、预解析的主要工作：
 
-变量声明和函数声明提升
+**变量声明和函数声明提升**
 
 解析器在执行当前代码前的进行扫描（var 、function）将变量和函数声明在当前作用域（全局、函数）内进行提升。
 
@@ -691,17 +814,36 @@ var AA = function AA(){     //AA(); //AA_
 AA();						//AA(); //AA_2
 
 //函数的提升在变量提升之上
+
+    var a = 1;
+    function fn1(){
+        console.log(a);//1
+        var b=2;
+        var c= 3;
+        function fn2(){
+            var c = 30;
+            //c =  30;没有定义会向上层找定义，
+            //就是对上层的重新赋值
+            var d = 4;
+            console.log(c);//30
+        }
+        fn2();
+        console.log(c);//3
+        console.log(d);//未定义报错
+    }
+    fn2();//报错，作用域仅在fn1()
 ```
 
 ## 9.3、预解析与作用域
 
-### 9.3.1、JS变量作用域
-
-变量的作用域是指变量在何处可以被访问到
-
-全局变量和局部变量
-
-ES5中没有块作用域，采用的是函数级作用域
+全局变量与局部变量
+- 全局变量：拥有全局作用域的变量（JS代码中任何地方都可以访问）
+- 全局变量是跨域了所有函数自身作用域的自由变量，可以在函数内和函数外直接访问
+- 局部变量：函数内声明的变量，只在函数体内有定义，作用域是局部性的
+- 在函数外不能直接访问函数的局部变量，但可以通过闭包来访问
+- 函数内访问同名变量时，局部变量会覆盖全局变量
+  •ES5中无块作用域
+  - 全局作用域、函数作用域、ES5中可以使用函数立即执行表达式来模拟块作用域
 
 # 10、JS作用域及执行上下文
 
@@ -728,11 +870,24 @@ function env(){
 env();//jack
 
 //通过new Function创建的函数对象不一定遵从静态词法作用域
+var scope = "global";
+function cahekScope(){
+    var scope = "local";
+    return function(){
+        return scope;
+    };
+}
+console.log(checkScope()());//local
+
+var scope="global";
+function checkScope(){
+    var scope = "local";
+    return new Function("return scope");
+}
+console.log(checkScope()());//global
+
+//ES5采用的是函数级作用域，没有块级作用域
 ```
-
-![img](file:///C:\Users\lenovo\AppData\Roaming\Tencent\Users\2390140586\TIM\WinTemp\RichOle\W1T4F]AVGN056DE_}JS{7IV.png)
-
-
 
 ## 10.2、JS执行上下文与调用栈
 
@@ -772,6 +927,57 @@ Js（ES5）中没有块作用域，容易造成js文件内或文件间同名变�
 
 ​	**通过IIFE对变量存储的改变（避免变量共享错误）**
 
+```javascript
+    //通过IIFE对变量存储的改变
+    function foo(){
+        var arr1 = [];
+        for(var i = 0;i<10;i++){
+            arr1[i] = function(){
+                return i;
+            }
+            //arr[i]中存储的都是i,整个循环结束，所有的i值都是10
+            //arr[i]存的是一个函数
+        }
+        return arr1;
+    }
+    var arr2 = foo();
+    arr2[0]();
+    //解除上述出现的问题。将arr[i]存储的函数变为立即执行
+    function foo(){
+        var arr1 = [];
+        for(var i = 0;i<10;i++){
+            // arr1[i] = (function(j){
+            //     return j;
+            // }(i));
+            //形成10个作用域（因为有10个匿名函数），作用域内的j值不同，并且不会共享，此时arr[i]存储的是一个值
+            (function(j){
+                arr1[j] = function(){
+                    return j;
+                }
+                //这里arr[j]存储的是一个函数
+            })(i)
+        }
+        return arr1;
+    }
+    var arr2 = foo();
+    arr2[0]();
+
+//立即执行函数*******************************
+        for(var i=0;i<10;i++){
+            (function(j){
+                arr[j] = function(){
+                return j;
+                }
+            })(i);
+            //每次循环都会生成一个自己作用域，作用域仅在自己内起作用
+            //并且作用域内的函数立即执行
+        }
+/*
+	自己总结的：for循环里面嵌套的函数存在变量共享问题
+	解决方案：函数整体套在一个(function(){}())里面
+*/
+```
+
 ## 11.3、IIFE实际应用案例
 
 避免闭包中废弃物的变量共享问题（页面导航问题）
@@ -799,6 +1005,21 @@ Js（ES5）中没有块作用域，容易造成js文件内或文件间同名变�
     var fn3 = fn1();//得到fn2函数
     console.log(fn3());//2
     console.log(fn3());//3
+
+    //函数（addNum）内部定义的函数（return 匿名函数）
+    //与其相关作用域中的变量（start）形成的实体
+    //start会一直保存在内存中不会被释放
+    function addNum(start){
+        //start会一直保留在内存当中，因为有闭包的存在不会释放
+        return function(step){
+            start  += step;
+            return start;
+        }
+    }
+    var fn3 = addNum(10);
+    console.log(fn3(1));
+    console.log(fn3(1));
+    console.log(fn3(1));
 //例子
 function foo(){
     var i=0;
@@ -812,13 +1033,67 @@ var b = foo();
 a();//1
 a();//2
 b();//1
+//a和b不是同一个闭包
+    /**闭包带来的影响
+     * 1、闭包可以让我们访问到函数内部定义的变量
+     * 2、闭包让关联作用域中的变量保持在内存中，不释放
+     * 
+    **/
 ```
 
 ## 12.2、闭包的常见形式
 
-
+```javascript
+//1、以函数对象形式返回
+//例一
+var tmp = 100;
+function foo(x){
+    var tmp = 3;
+    return function(y){
+        console.log(x+y+(++tmp));
+    }
+}
+var fee = foo(2);//fee形成了一个闭包
+fee(10);//2+10+4
+fee(10);//2+10+5
+//例二
+function foo(x){
+        var tmp = 3;
+        return function(y){
+            x.count = x.count?x.count+1:1
+            console.log(x + y + tmp,x.count);
+            //console.log(++tmp);
+            //console.log(++x);
+            //tmp 和 x.count ,x都是闭包的
+        }
+    }
+    var age  = new Number(2);
+    var bar = foo(age);
+    bar(10);//15,1
+    bar(10);//15,2
+    bar(10);//15,3
+//2、作为对象的方法返回
+    function counter(){
+        var n =0;
+        return {
+            count:function(){return ++n },
+            reset:function(){n = 0;return n;},
+        }
+    }
+    var c = counter();
+    var d = counter();
+    console.log(c.count());//1
+    console.log(d.count());//1
+    console.log(c.reset());//0
+    console.log(c.count());//1
+    console.log(d.count());//2
+```
 
 ## 12.3、闭包的作用及常用场景
+
+可以通过闭包来访问隐藏在函数作用域内的局部变量
+
+   使函数中的变量被保存在内存中不被释放
 
 # 13、JS对象综述
 
@@ -841,7 +1116,15 @@ var obj = {
 console.log(obj.num);//10
 console.log(obj.str);//Hi
 obj.show();			 //Hi
-
+/*
+	只有构造函数才有prototype属性
+	function Person(username,age){
+        this.uaername = username;
+        this.age = age;
+    }
+    var p = new Person("zhangsan",200);
+    console.log(p.__proto.__ == Person.prototype);//true
+*/
 // 左边instanceof 右边：
 /** 含义：
  * 1，左边是右边的一个实例吗
@@ -1017,11 +1300,12 @@ var obj3 = {};
 for(var i=0;i<10;i++){
     obj3.i = i;
 }
-
+//9
 var obj4 = {};
 for(var i=0;i<10;i++){
     obj4[i] = i;
 }
+//9
 ```
 
 # 14、JS对象属性特性
@@ -1080,15 +1364,96 @@ Object.defineProperty(obj,"x",{
     value:'hhh'
 });
 for(var k in obj){
-    console.log(k,obj[k]);
+    console.log(k,obj[k]);//x hhh
 }
 ```
 
 ### 14.2.2、对象添加属性
 
+```javascript
+//1、直接添加
+var obj={
+    x=1,
+    y=2
+};
+//直接添加属性，其所有特性默认是true
+obj.z=3;
+console.log(obj);
+//2、通过Object.defineProperty添加
+var obj={
+    x:1,
+    y:2
+};
+Object.defineProperty(obj,"z",{
+    //writable:true,
+    enumerable:true,
+    //configurable:true,
+    value:3
+    //如果writable和configurable没有指定默认为false
+});
+for(var k in obj){
+    console.log(k,obj[k]);
+}
+```
+
 ## 14.3、对象访问器属性的特性
 
 ## 14.4、特性描述符及补充
+
+属性特性描述符是一个用来查看对象属性的特性的对象
+
+该对象包含4个属性，对应4个特性，通过getOwnPropertyDescriptor方法获得
+
+```javascript
+	var obj = {x:0};
+    Object.defineProperty(obj,'y',{
+        value:1,
+        enumerable:true,
+        configurable:true,
+        writable:true
+    })
+    Object.prototype //站在对象的最顶端。所有的object.prototype都是true
+//属性特性描述符
+    //获取特点对象，特定属性的属性描述符
+    Object.getOwnPropertyDescriptor(obj,'y');
+```
+
+给多个属性设置特性发方法
+
+```javascript
+//给多个属性设置特性
+    var exol ={exol:0805}
+    Object.defineProperties(exol,{
+        e:{value:0,writable:true,configurable:true,enumerable:true},
+        x:{value:4,writable:true,enumerable:true},
+        o:{value:08,writable:true,enumerable:true}
+    });
+```
+
+关于属性特性的继承
+
+```javascript
+var o1={
+    x:1
+}
+Object.defineProperty(o1,"x",{
+    writable:true,
+    value:4
+})
+var o2 = Object.create(o1);
+console.log(o2.__proto__ == o1);//true
+//o2.__proto__和o1是完全相同的对象的引用
+    //改其中一个，另一个也就变化
+console.log(o2.x);//4
+//delete属性只能删除自身所具有的的属性
+delete o2.x;
+console.log(o2.x)//4
+
+o2.__proto__.z = 2;
+console.log(o1.z);//2
+o2.__proto__.x = 2;
+console.log(o1.x);//2
+```
 
 # 15、JS原型继承
 
