@@ -909,6 +909,27 @@ console.log(checkScope()());//global
 
 ## 11.1、IIFE及使用方式
 
+```javascript
+//1、立即执行
+    /*
+        某些场景实现独立作用域，并且立即执行
+        解决：
+            1、防止变量污染
+            (function(){
+                用于某些效果只执行一次
+             })()
+            2、防止变量的非期望共享
+            for(var i=0;i<10;i++){
+                //1、给元素绑定事件，回调函数
+                //2、延迟执行、定时执行
+                (function(j){
+                    每次循环形成一个独立的作用域，
+                    作用域之间不会相互影响
+                })(i)
+            }
+    */
+```
+
 ​	IIFE：立即执行函数表达式
 
 **作用**：建立函数作用域，解决ES5作用域缺陷所带来的问题，如：变量污染、变量共享等问题
@@ -1459,25 +1480,455 @@ console.log(o1.x);//2
 
 ## 15.1、JS对象及继承方式综述
 
+JavaScript采用的是原型的继承方式，每个对象都有一个原型对象，最原始的原型是null。
+
+JavaScript的继承是对象-对象的原型继承，为面向对象提供了动态继承的功能。
+
+任何方式创建的对象都有原型对象，可以通过对象的__proto__属性来访问原型对象
+
+```javascript
+var obj = {//obj的原型是Object.prototype
+    num:10,
+    str:"Hi",
+    show:function(){
+        return this.str;
+    }
+};
+//console.log(obj.__proto__);
+console.log(obj.__proto__ === Object.prototype);
+
+var newObj = Object.create(obj);
+var newObj2 = Object.create(obj);//思考：多个对象同一个原型的情况
+newObj.age = 23;
+
+console.log(newObj.__proto__ === obj);
+console.log(newObj2.__proto__ === obj);
+
+//JavaScript的继承方式 是对象-对象的继承，对象要实现继承首先要有原型对象
+console.log(newObj.__proto__.__proto__);//Object.prototype
+console.log(newObj.__proto__.__proto__.__proto__);//null
+```
+
 ## 15.2、JS对象的原型链
 
+```javascript
+
+   var obj1 = {x:8};
+   var obj2 = Object.create(obj1);
+   console.log(obj1.__proto__ == Object.prototype);
+
+   console.log(obj2.__proto__ == obj1);//obj1
+   console.log(obj2.__proto__.__proto__ == Object.prototype);
+   console.log(obj2.__proto__.__proto__.__proto__);//null
+   console.log(obj1.prototype);
+```
+
+
+
+```JavaScript
+///////////Part1 原型链综述////////////
+var proObj = {
+    z:3
+};
+
+var obj = Object.create(proObj);
+obj.x = 1;
+obj.y = 2;
+
+console.log(obj.x);//1
+console.log(obj.y);//2
+console.log(obj.z);//3
+
+console.log("z" in obj);//true
+console.log(obj.hasOwnProperty("z"));//false
+
+///////////Part2 原型链属性操作////////////
+obj.z = 5;
+
+console.log(obj.hasOwnProperty("z"));
+console.log(obj.z);
+console.log(proObj.z);
+
+obj.z = 8;
+console.log(obj.z);
+
+delete obj.z;//true
+console.log(obj.z);
+
+delete obj.z;//true
+console.log(obj.z);//still 3
+
+//如何删除原型上的属性
+delete  obj.__proto__.z;//或者delete proObj.z;
+console.log(obj.z);//此时彻底没有z了
+
+//注意：hasOwnProperty是原型方法：调用的主体为obj,在自身上找该方法
+
+//区别与Object.keys(obj)这种静态方法
+```
+
 ## 15.3、基于构造函数实现的原型继承
+
+```javascript
+function MyObj() { }
+MyObj.prototype.z = 3;
+
+var obj = new MyObj();
+obj.x = 1;
+obj.y = 2;
+
+console.log(obj.x);//1
+console.log(obj.y);//2
+console.log(obj.z);//3
+
+console.log("z" in obj);//true
+console.log(obj.hasOwnProperty("z"));//false
+
+///////////Part2 原型链属性操作////////////
+obj.z = 5;
+
+obj.hasOwnProperty("z");//true
+console.log(obj.z);//5
+console.log(MyObj.prototype.z);//3
+
+obj.z = 8;
+console.log(obj.z);//8
+
+delete obj.z;//true
+console.log(obj.z);//3
+
+delete obj.z;//true
+console.log(obj.z);//still 3
+
+//如何删除原型上的属性
+delete  obj.__proto__.z;//或者delete MyObj.prototype.z;
+console.log(obj.z);//此时彻底没有z了
+```
 
 # 16、JS中的this
 
 ## 16.1、JS this简介及特点
 
+在 JavaScript 中，this 是动态绑定，或称为运行期绑定的。由于其运行期绑定
+的特性，JavaScript 中的 this 含义要丰富得多，它可以是全局对象、当前对象
+或者任意对象，这完全取决于函数的调用方式
+t**his不进行作用域传递（函数嵌套时的this缺陷）**
+
 ## 16.2、JS this四种应用场景
 
+```javascript
+//1、一般函数中的this
+//（1）、非严格模式下指代全局对象
+//可以通过this在函数内添加、删除、修改全局对象属性
+function fooO(){
+    console.log(this == Window);//true
+}
+foo();
+var a=1;b=2;
+function fee(){
+    this.c = "新添加的全局变量";
+    this.b=20;
+    delete this.a;
+}
+fee();
+console.log(b,c);//20 新添加的全局变量
+//（2）、严格模式下是啊undefined
+//可以以此来判断当前是否是严格模式
+function pcy(){
+    'use strict'
+    console.log(this);//undefined
+}
+function isStrictMode(){
+    return this==undefined?true:false;
+}
+isStrictMode();
+```
+
+```javascript
+//2、对象方法中的this
+//函数作为对象的一个属性是成为此对象的方法
+//(1)、无嵌套的情况下：this指向调用此方法的对象
+var point={
+    x:0,
+    y:0,
+    moveTo:function(x,y){
+        this.x=x;
+        this.y=y;
+    }
+};
+point.omveTo(1,1);//this绑定到当前对象，即point对象
+console.log(point);//x: 1, y: 1, moveTo: ƒ
+//(2)、有嵌套的情况下：
+//this不进行作用域传递、函数嵌套
+var point = {
+    x:0,
+    y:0,
+    moveTo:function (x,y) {
+        //内部嵌套函数
+        function moveToX() {
+            this.x = x;//this绑定到了哪里？
+        }
+        //内部嵌套函数
+        function moveToY() {
+            this.y = y;//this绑定到了哪里？
+        }
+        moveToX();//moveToX.call(this);通过间接调用来解决
+        moveToY();
+    }
+};
+point.moveTo(2,2);
+console.log(point);//x:0 y:0
+```
+
+```javascript
+//3、构造函数中的this
+//构造函数中的this指代通过new新创建的对象，指向函数调用的主体
+function point(x,y){
+    this.x=x;
+    this.y=y;
+    this.moveTo=function (){
+        //这里的this指向p
+        this.x=x;
+        this.y=y
+    }
+}
+var p = new Point(5,5);
+console.log(p);//x:5,y:5
+p.moveTo(15,15);
+console.log(p);//x:5,y:5
+```
+
+```javascript
+//4、间接调用中的this
+		//方法A.call(对象)
+        //切换方法A的调用主体。this的指向函数的调用主体
+        //call(要切换的调用对象，arg1,arg2);
+
+        //方法B.apply(要切换的调用对象,[arg1,arg2,arg3]);
+
+        var objA = {name:"AA",x:1};
+        var objB = {name:"BB",x:2};
+        function test(){
+            console.log(this.name,this.x);
+        }
+        objA.fun = test;
+        objA.fun();//AA 1
+        objA.fun.call(objB,3);//BB 2
+```
+
 ## 16.3、JS this缺陷及解决方法
+
+```javascript
+//1、对象方法中是this有嵌套的情况
+var point = {
+    x:0,
+    y:0,
+    moveTo:function (x,y) {
+        //内部嵌套函数
+        function moveToX() {
+            this.x = x;//this绑定到了哪里？
+        }
+        //内部嵌套函数
+        function moveToY() {
+            this.y = y;//this绑定到了哪里？
+        }
+        moveToX();//moveToX.call(this);通过间接调用来解决
+        moveToY();
+    }
+};
+point.moveTo(2,2);
+console.log(point);
+//////////////////解决方案/////////////////////
+//1、软绑定:使用变量软绑定，使this指向正确
+var point = {
+    x:0,
+    y:0,
+    moveTo:function (x,y) {
+        var that=this;//软绑定的重要环节/////////////
+        //内部嵌套函数
+        function moveToX() {
+            that.x = x;
+        }
+        //内部嵌套函数
+        function moveToY() {
+            that.y = y;
+        }
+        moveToX();
+        moveToY();
+    }
+};
+point.moveTo(2,2);
+console.log(point);//x:2 y:2
+//2、使用call、apply间接调用，使this指向正确
+var point = {
+    x:0,
+    y:0,
+    moveTo:function (x,y) {
+        //内部嵌套函数
+        function moveToX() {
+            this.x = x;//this绑定到了哪里？
+        }
+        //内部嵌套函数
+        function moveToY() {
+            this.y = y;//this绑定到了哪里？
+        }
+       moveToX.call(this);//moveToX.call(this);通过间接调用来解决
+        moveToY();
+    }
+};
+point.moveTo(2,2);
+console.log(point);//x:2 y:0
+//3、使用Function.prototype.bind使this指向正确
+var point = {
+    x:0,
+    y:0,
+    moveTo:function (x,y) {
+        //内部嵌套函数
+        function moveToX() {
+            this.x = x;//this绑定到了哪里？
+        }
+        //内部嵌套函数
+        function moveToY() {
+            this.y = y;//this绑定到了哪里？
+        }
+        moveToX.bind(point)();
+        moveToY();
+    }
+};
+point.moveTo(2,2);
+console.log(point);//x:2 y:0
+```
+
+```javascript
+//2、构造函数中的this有嵌套情况
+function Point(x,y) {
+    this.x = x;
+    this.y = y;
+    this.moveXY = function (x,y) {
+        function moveX(x) {
+            this.x+=x;//这里的x是moveXY()传过了的，this.x正常情况指上面的
+        }
+        function moveY(y) {
+            this.y+=y;
+        }
+        moveX(x);
+        moveY(y);
+    }
+}
+var p = new Point(2,3);
+p.moveXY(1,1);
+console.log(p);
+////////////////////////解决方案///////////////////
+//1、软绑定
+//2、call、apply
+//3、moveToX.bind(point)()
+```
 
 # 17、深入理解JS的继承方式
 
 ## 17.1、JS对象-对象原型继承
 
+```javascript
+function Person(name){
+    this.name = name;
+}
+Person.prototype.age = 22;
+Person.prototype.showName = function(){console.log(this.name);};
+function Student(id){
+    this.id = id;
+}
+//var p1 = new Person("Mike");Student.prototype = p1;
+Student.prototype = new Person("Mike");
+var s1 = new Student(2017001);
+var s2 = new Student(2017002);
+
+//测试如下代码，思考为什么，这样的继承有什么弊端
+console.log(s1.name,s1.age,s1.id);
+console.log(s2.name,s2.age,s2.id);
+s1.__proto__.name = "Jack";
+console.log(s2.name);
+s2.__proto__.__proto__.age = 99;
+console.log(s2.age);
+
+// console.log(s1);
+// console.log(s1.__proto__);
+// console.log(s1.__proto__.__proto__);
+```
+
 ## 17.2、通过构造函数模拟类-类的继承
 
+- [ ] ```javascript
+  //JS实现继承的形式 一
+  function Person(name,age){
+      this.name = name;
+      this.age = age;
+  };
+  Person.prototype.showName = function(){console.log(this.name);};
+  function Student(name,age,id){
+      Person.call(this,name,age);
+      this.id = id;
+  }
+  Student.prototype.__proto__ = Person.prototype;
+  var s1 = new Student("xxx",22,2017001);
+  var s2 = new Student("www",23,2017002);
+  
+  
+  //JS实现继承的形式 二
+  function Person(name,age){
+      this.name = name;
+      this.age = age;
+  };
+  Person.prototype.showName = function(){
+      console.log(this.name);
+  };
+  function Student(name,age,id){
+      Person.call(this,name,age);
+      this.id = id;
+  }
+  Student.prototype = Object.create(Person.prototype);
+  // console.log(Person.prototype.constructor); //
+  // console.log(Student.prototype.constructor); //
+  Student.prototype.constructor = Student;
+  var s1 = new Student("xxx",22,2017001);
+  var s2 = new Student("www",23,2017002);
+  
+  ```
+
 ## 17.3、JS继承补充
+
+静态方法和原型方法的区别：
+
+​	静态方法是构造函数对象（类）的方法，原型方法是实例化对象（对象）的原型的方法。
+
+```javascript
+//静态方法：Object.create() --直接定义在构造函数之上，只能构造函数.调用
+//原型方法：实例化对象的原型的方法，定义在原型链上
+//静态方法实例与原型方法实例
+var BaseClass = function() {};
+BaseClass.prototype.f2 = function () {
+    console.log("This is a prototype method ");
+};
+BaseClass.f1 = function(){//定义静态方法
+    console.log("This is a static method ");
+};
+BaseClass.f1();//This is a static method
+var instance1 = new BaseClass();
+instance1.f2();//This is a prototype method
+```
+
+```javascript
+    //constructor属性
+    function Person(username,age){
+        this.username = username;
+        this.age = age;
+    }
+    Person.prototype.constructor == Person;
+    var p = new Person("zz",55);
+    p.constructor == Person;/*为什么呀呀呀呀呀*/
+
+    var obj = new Object();
+    obj.constructor == Object;
+```
 
 # 18、Array数组
 
