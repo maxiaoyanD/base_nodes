@@ -1,4 +1,4 @@
-# 1、概述
+1、概述
 
 1. git网址：https://github.com/edu2act/course-javascript-advanced
 
@@ -20,7 +20,7 @@
 
 # 2、JS数据类型、值与类型转换
 
-## 1、存储过程
+## 2.1、存储过程
 
 1. 基础数据类型存储过程（String、Number、Undefined、Null、Boolean
 
@@ -28,7 +28,7 @@
 
 2. 对象的存储存放在堆区或栈区，通过引用，两个相互赋值的值会相互影响
 
-   **？？栈区存引用，堆区存内容？？**
+   **栈区或堆区存引用，堆区存内容**
 
 ```javascript
 /**************基本数据类型和引用类型的区别*****************/
@@ -43,8 +43,8 @@
         obj2.username = "lisi";
         console.log(obj1);//lisi
         obj1.username = "wangqu";
-        console.log(obj2);
-        console.log(obj1);
+        console.log(obj2);//wangqu
+        console.log(obj1);//wangqu
         //obj1和obj2指向同一片堆区，值相互影响
         var arr1 = [1,5,9];
         var arr2 = arr1;
@@ -62,11 +62,11 @@
         console.log(obj1==obj2);//false
 ```
 
-## 2、数据类型检测方法（typeof、instanceof）
+## 2.2、数据类型检测方法（typeof、instanceof）
 
 - typeof有：string、number、Boolean、undefined、object、function
 
-## 3、基本数据类型的值
+## 2.3、基本数据类型的值
 
 - Number类型的值
   - 整数与浮点数
@@ -81,9 +81,20 @@
 - Null与Undefined
   - null、undefined
 
-## 4、包装对象
+## 2.4、包装对象
+
+数字、布尔、字符串等基本数据类型都有相应的包装对象类型，可以将其包装成对象。
+
+ 存储或读取基本类型（字符串、数字、布尔）值的属性时，会创建临时包装对象
+
+ 基本类型其属性不能被改变、添加或删除（原始值不可变性）
 
 ```javascript
+//临时对象在使用之后立即释放
+var str=”test”;
+str.p = 4；//设置临时对象属性
+var t = str.p; // 临时对象已释放，再输出t时为undefined
+
 /*装箱：*/
 // var str = new String('mxy');
 var str1 = 'mxy';
@@ -93,6 +104,12 @@ var str1 = 'mxy';
 var strObject = new String(str1);
 strObject.substr(0,2);
 ```
+
+## 2.5、数据类型转换
+
+undefined ----> NaN
+
+null---->0
 
 # 3、基本（原始）数据类型进阶
 
@@ -122,11 +139,12 @@ strObject.substr(0,2);
 			var num1 = 11.29;
 			var numobj2 = new Number(num1);
 			console.log(numobj2);
-			num1.toFixed(1);//11.29
+			num1.toFixed(1);//11.3
 			//toPrecision(x):转换为指数
 			var n1 = 12345.6789;
 			console.log(n1.toPrecision(2));
 			//toString():转换为字符串
+			console.log(n1.toString())
 //Number构造器属性（静态属性）
 Number.MAX_VALUE
 Number.MIN_VALUE
@@ -139,7 +157,7 @@ Number.POSITIVE_INFINITY
 //Number._proto_  :所有的方法都构造在他之上
 
 // Number.prototype.toFixed();
-// Number.prototype.toPrecision();
+// Number.prototype.toPrecision();转换成指数
 // Number.prototype.toString();
 // Number.prototype.toExponential();
 
@@ -148,10 +166,12 @@ Number.POSITIVE_INFINITY
 			//变量构造函数的prototype是相等的
 			var n = 20;
 			console.log(n.__proto__);
-			console.log(n.prototype);
+			console.log(Number.prototype);
 ```
 
 ## 3.2、String进阶
+
+String基本数据类型变量有与其对应的String包装对象，当访问String基本数据类型属性或方法时创建临时包装对象，访问的都是对象中的属性或方法
 
 3.2.1、字符串比较
 
@@ -175,21 +195,32 @@ String.fromCharCode.apply(null,[97,98,99]);//"abc"
 
 3.2.4、字符串原型方法之提取字符串
 
+| 原型方法                                   | 作用                                                         |
+| ------------------------------------------ | ------------------------------------------------------------ |
+| String.prototype.charAt(index);            | 获取对应index位置的字符                                      |
+| String.prototype.charCodeAt(index)         | 返回对应位置的字符是Unicode字符                              |
+| String.prototype.slice(start,end);         | 方法提取一个字符串的一部分，并**返回一新的字符串**。传入的索引值可以为负。从start到end-1 |
+| String.prototype.substr(start,length)      | 返回一个字符串中从指定位置开始到指定字符数的字符。例：str1.substr(0,-1);//""（因为长度） |
+| String.prototype.substring(start,end?);    | 截止位置可以不写，如果start>end会自动交换位置，且超出范围自动截断 |
+| String.prototype.split(特定字符,【长度】); | 以特定的字符分割成数组,长度可选可不选。                      |
+
+
+
 ```javascript
 var str1 = "abcdjhfe";
-//str.charAT(index)：返回特定索引位置的字符
-console.log(str1.charAT位置的字符的Unicode码(3));//d
+//str.charAt(index)：返回特定索引位置的字符
+console.log(str1.charAt(3));//d
 //str.charCodeAt(index):返回特定索引
 console.log(str1.charCodeAt(3));
 //slice(起始位置，截止位置)：截取
-console.log(str1.slice(0,3));
-str1.slice(1,-1)
+console.log(str1.slice(0,3));//abc
+str1.slice(1,-1)//bcdjhf
 //substr(截取的起始位置,截取字符串的长度):
 str1.substr(0,3);
 str1.substr(0,-1);//""
 //substring(截取起始位置，截取截止位置):截止位置可不写
 //如果sunstring起始位置>结束位置会自动交换位置substring(3,0)
-//substring(0,-1)和slice(0,-1)是不一样的
+//substring(0,-1)（无输出结果）和slice(0,-1)是不一样的
 //如果超出索引范围自动截断substring(-1,3)
 str1.substring(0,3);
 //split(特定的字符,(长度)):以特定的字符分割成数组,长度可选可不选
@@ -199,6 +230,16 @@ str2.split("*",2);
 ```
 
 3.2.5、字符串原型方法之字符串变换
+
+| 原型方法                                                 | 说明                                                         |
+| -------------------------------------------------------- | ------------------------------------------------------------ |
+| String.prototype.trim( );                                | 会从一个字符串的两端删除空白字符                             |
+| String.prototype.concat(str1,str2);                      | 将一个或多个字符串与原字符串连接合并，形成一个新的字符串并返回。 |
+| String.prototype.indexOf(searchingString,position?);     | 第一次出现的指定值的索引，第二个参数可以指定开始查找的位置，如果不存在则返回-1 |
+| String.prototype.lastIndexOf(searchingString,position?); | 最后一次出现的指定值的索引，第二个参数可以指定开始查找的位置 |
+| String.prototype.localeCompare(other);                   | 返回一个数字来指示一个参考字符串是否在排序顺序前面或之后或与给定字符串相同。 |
+
+
 
 ```javascript
 var ss = "     abc  d     "
@@ -242,7 +283,58 @@ str4.localeCompare('啦');
 
 ## 4.2、JS严格模式
 
+```javascript
+//1、严格模式下的变量需要声明
+function sloopFunc(){
+    sool=120;
+}
+sloopFunc();
+console.log(sool);//120
+/*严格模式下*/
+function sloopFunc(){
+    'use strict'
+    sloop=120;
+}
+sloopFunc();
+console.log(sloop);//报错
+//2、严格模式下的一般函数的this指向是undefined
+function thisTest(){
+    console.log(this);//windows
+}
+function thisTest(){
+    'use strict'
+    console.log(this);//undefined
+}
+//3、严格模式下禁止删除不可改变的属性和未定义的变量
+var str="abc"
+function sooFunc(){
+    str.length=7;
+    console.log(str.length);//7
+}
+function sooFunc(){
+    'use strict'
+    str.length=7;
+    console.log(str.length);//报错
+}
+//4、严格模式下禁止函数参数重名
+function soo(a,a,b){
+    return a+b;
+}
+soo(2,3,4);//7
+'use strict'
+function soo(a,a,b){
+    return a+b;
+}
+soo(2,3,4);//报错
+```
+
+
+
 ## 4.3、switch详解、for....in
+
+从满足第一case处开始执行，直到遇到break为止，若都没有break则直到default结束为止.
+
+for ....in常用来遍历对象、数组
 
 # 5、JS赋值、算数、关系运算符
 
@@ -326,8 +418,6 @@ console.log(NaN === NaN); //false
 console.log({} === {});//false
 ```
 
-
-
 # 6、JS逻辑运算符进阶
 
 ## 6.1、&&与||的基本理解应用
@@ -345,6 +435,11 @@ console.log({} === {});//false
 &&短路原则：左真右，左假左
 
 ||短路原则：左真左，左假右
+
+-  对于&&，转换后的左操作数若为true，则直接返回原始右操作数，若为false则直接返回原始左操作数
+
+- 对于| |，转换后的左操作数若为true，则直接返回原始左操作数，若为false则直接返回原始右操作数
+- 通过短路原则，可以用&&和| |来实现复杂的条件语句来代替if-else
 
 **注意：**
 
@@ -496,6 +591,30 @@ var obj = {
 }
 obj.test();
 
+//3-通过call()和aplly()间接调用
+    //(this为函数对象的call/apply方法的首个参数，移花接木)
+    objA = {"name":"AA"};
+    objB = {"name":"BB"};
+    objA.foo = function(){
+        console.log(this.name);
+    }
+    objA.foo();//AA
+    //方法名.call()可以切换调用的对象
+    objA.foo.call(objB);//BB
+    objA.foo.apply(objB);//BB
+
+//4-作为构造函数调用（this指向实例化对象）
+    //构造函数的函数名要大写
+    function Person(name){
+        this.name = name;
+    }
+    Person.prototype.sayHi = function(){
+        console.log("hi" + this.name);
+    }
+    var person = new Person("mamama");
+    person.sayHi();
+    console.log(person.__proto__ === Person.prototype);
+
 //给obj动态添加方法
 var obj ={
     name : 'jsck'
@@ -527,31 +646,6 @@ console.log(obj.fun4())//我以为的结果是55，实际结果是undefined
  * console.log(obj.fun3()())//window
  * console.log(obj.fun4())//ƒ (){name:'hhh'}
 */
-
-//3-通过call()和aplly()间接调用
-    //(this为函数对象的call/apply方法的首个参数，移花接木)
-    objA = {"name":"AA"};
-    objB = {"name":"BB"};
-    objA.foo = function(){
-        console.log(this.name);
-    }
-    objA.foo();//AA
-    //方法名.call()可以切换调用的对象
-    objA.foo.call(objB);//BB
-    objA.foo.apply(objB);//BB
-
-//4-作为构造函数调用（this指向实例化对象）
-    //构造函数的函数名要大写
-    function Person(name){
-        this.name = name;
-    }
-    Person.prototype.sayHi = function(){
-        console.log("hi" + this.name);
-    }
-    var person = new Person("mamama");
-    person.sayHi();
-    console.log(person.__proto__ === Person.prototype);
-
 ```
 
 ## 7.2、函数参数的数量问题
@@ -565,7 +659,7 @@ function test(){
     console.log(arguments.length);//4
     console.log(typeof arguments);//Object
     console.log(arguments instanceof Array);//false
-    console.log(arguments instanceof Object);//true 
+    console.log(arguments instanceof  Object);//true 
     console.log(Array.prototype.slice.call(arguments));//["Hello",",","World","!"]
     var s = "";
     for(var i=0;i<arguments.length;i++){

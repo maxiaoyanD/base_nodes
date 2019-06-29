@@ -84,7 +84,7 @@ bg 任务编号 转到后台执行
 
 ​	/也有 . . ，但是指向的是自己
 
-​      **保存用户信息：/etc/passed**
+​      **保存用户信息：/etc/passwd**
 
 ​       **保存用户密码：/etc/shadow**
 
@@ -145,7 +145,7 @@ bg 任务编号 转到后台执行
 
 ​	终端是计算机最外围设备。用户获取用户输入，并显示程序的输出结果。
 
-​	shell本身就是一个程序，主要工作室运行命令，并把命令输出的结果呈现给用户。
+​	shell本身就是一个程序，主要工作是运行命令，并把命令输出的结果呈现给用户。
 
 ## 4.2、命令分类
 
@@ -227,7 +227,7 @@ su用于切换用户，默认切换到root用户。
 
 创建用户组：sudo addgroup h5
 
-创建用户指定用户组：sudo --ingroup h5 linuxer（创建linuxer并指定组为h5）
+创建用户指定用户组：sudo adduser --ingroup h5 linuxer（创建linuxer并指定组为h5）
 
 ​			 如果h5的ID是1003也可以是sudo --ingroup 1003 linuxer
 
