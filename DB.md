@@ -1,13 +1,3 @@
-create database student   --- 创建数据库
-
-dbo ----- 系统默认架构
-
-# 2、关系代数
-
-没有使用。。。。用整体-有的
-
-至少有或者查询全部 用÷
-
 # 第三章、关系数据库标准语言
 
 学生表：Student(Sno,Sname,Ssex,Sage,Sdept)
@@ -80,7 +70,7 @@ drop table student
 --*************建立索引*****************************************
 --asc 升序
 --desc 降序 含有空值，空值是最大值
---创建索引
+--创建唯一索引，已含有重复值的属性列不能建立unique索引。
 create unique index stusno on student(sno asc)
 create index coucon on course(cno desc)
 --创建聚集索引，一个表中聚集索引只能有一个
@@ -108,10 +98,10 @@ from student
 --查询每个学生的学号，出生年份  +上别名
 select sno 学号,2019-sage 出生年份
 from student
---消除不重复的行   distinct
+--消除重复的行   distinct
 select distinct sno
 from sc
---查询满足条件的元祖where*********************************
+--查询满足条件的元组where*********************************
 --where语句后面不能出现聚集函数*******
 	--比较      =，>=,<=,==,!=
 	--确定范围   between and ，not between and
@@ -124,11 +114,9 @@ from sc
 --查询以'DB_'开头的，且倒数第三个字符为i的课程
 select sdept
 from student
-where like 'DB|_%i___' escape "|"
---
-select sno
-from sc
-where grade>60
+where like 'DB\_%i___' escape "|"
+
+
 --查找CS和IS的所有学生
 select sno,sname,sdept
 from student
@@ -154,7 +142,7 @@ where sdept='CS' and ssex='女' and sage<20
 select sno,grade
 from sc
 where cno='3'
-order by desc
+order by greade desc
 --查询全体学生情况，查询结果按所在系升序排序，同系学生按年龄降序
 select *
 from student
@@ -215,7 +203,7 @@ on student.sno=sc.sno
 --嵌套查询******************************************************
 --子查询不能使用order by
 --不相关子查询
-	子查询的查询条件不依赖于父查询（有里向外查询，子查询为父查询提供条件）
+	子查询的查询条件不依赖于父查询（由里向外查询，子查询为父查询提供条件）
 --相关子查询
 	子查询的查询条件依赖于父查询（外层提供查询条件）
 /*带有in谓词的子查询*/
@@ -278,7 +266,7 @@ where grade>=(
 	若内层查询非空，则外层的where子句返回false
 	若内层查询为空，则外层的where子句返回true
 --用exists查询子查询中的select后都是*
---查询所有先修了1号课程的学生姓名
+--查询所有选修了1号课程的学生姓名
 select sname
 from student
 where exists
@@ -305,7 +293,7 @@ where not exists
      	(
             select *
          	from sc
-         	where sc.sno = student.sc and 
+         	where sc.sno = student.sno and 
          		sc.cno = course.cno
         )
     )
@@ -325,7 +313,82 @@ where not exists
         and z.cno = y.cno
     )
 )
-
+/*
+	在执行语句修改时会交叉修改操作是否已破坏定义的完整性
+	实体完整性:主属性非空
+	用户定义的完整性：not null 、unique，值域约束
+*/
+--************************数据的插入****************************
+--1、插入元组
+-- 将一个新学生记录（学号：201215128；姓名：陈冬；性别：男；    所在系：IS；年龄：18岁）插入到Student表中。
+insert into student(sno,sname,sage,ssex,sdept)
+values('201215128','陈冬','18','男','IS')
+--2、插入子查询结果
+	--(1)、建表
+		create table Deptage
+		(
+        	sdept char(15),
+            avgage int
+        );
+     --(2)、插入数据
+        insert into Deptage(sdept,avgage)
+        select sdept,avg(sage)
+        from student
+        group by sdept
+--************************数据修改*******************************
+--set语句：指定要修改方式、要修改的列、修改后取值
+--where子句：指定要修改元组，缺省表示要修改表中的所有元组
+--将学生201215121的年龄改为22岁。
+update student
+set sage=22
+where sno='201215121'
+--将所有学生的年龄增加1岁。
+updete student
+set sage=sage+1
+--带子查询的修改语句
+--将计算机科学系全体学生的成绩置零。
+update sc
+set grade=0
+where 'CS' =(
+	select sdept
+    from student
+    where student.sno = sc.sno
+)
+--********************数据删除***********************************
+--删除学号为201215128的学生纪录
+delete from  student
+where sno='201215128'
+--删除计算机科学系所有学生的选课记录。
+delete from sc
+where 'CS' = (
+	select sdept
+    from student
+    where student.sno=sc.sno
+)
+--************************视图*******************************
+--子查询不允许含有ORDER BY子句和DISTINCT短语
+--WITH CHECK OPTION
+	--透过视图进行增删改操作时，不得破坏视图定义中的谓词条件（即子查询中的条件表达式）
+--创建信息系学生的视图
+create view IS_view(sno,sname,sage)
+as
+select sno,sname,sage
+from student
+where sdept='IS'
+with check option
+--查询视图
+select sno,sname
+from IS_view
+where sage<20
+--更新视图
+	--视图实体化法
+	--视图消解法
+--指定WITH CHECK OPTION子句后
+   --DBMS在更新视图时会进行检查，防止用户通过视图对不属于视图范围内的基本表数据进行更新
+--将信息系学生视图IS_Student中学号201215122的学生姓名改为“刘辰” 
+update IS_Student
+set sname='刘晨'
+where sno='201215122'
 ```
 
 # 第六章
@@ -739,7 +802,6 @@ begin
 	from deleted
 end
 
-
 ```
 
 
@@ -829,27 +891,59 @@ end
 
 ​	数据转储、登录日志文件
 
-第五节： 恢复策略
+​	（1）、数据转储
 
-第六节： 带有检查点的恢复技术
+​		转储是指DBA将整个数据库复制到磁带或另一个磁盘上保存起来的过程，这些备用的数据文本称为后备副本或后援副本
 
-第七节： 数据库镜像
+​		静态转储：运行期间不允许事务运行；动态转储可以与事务一起运行
+
+​	（2）、**登入日志文件**
+
+- 日志文件是用来记录事务对数据库的更新操作的文件
+
+- 日志文件的格式：以记录为单位的日志文件和以数据块为单位 的日志文件
+
+- 以记录为单位的日志文件内容（均作为日志文件中的一个日志记录 ）
+
+  各个事务的开始标记(BEGIN TRANSACTION)
+
+  各个事务的结束标记(COMMIT或ROLLBACK)
+
+  各个事务的所有更新操作
+
+- 文件日志的作用：进行事务故障恢复、进行系统故障恢复、协助后副本进行介质故障恢复
+
+- 登记日志文件的基本原则：
+
+  登记的次序严格按并行事务执行的时间次序
+
+  必须先写日志文件，后写数据库
+
+  写日志文件操作：把表示这个修改的日志记录写到日志文件；写数据库操作：把对数据的修改写到数据库中
+
+2.如何利用这些冗余数据实施数据库恢复
+
+## 第五节： 恢复策略
+
+## 第六节： 带有检查点的恢复技术
+
+## 第七节： 数据库镜像
+
+​	DBMS自动把整个数据库或其中的关键数据复制到另一个磁盘上
+
+​	DBMS自动保证镜像数据与主数据库的一致性，每当主数据库更新时，DBMS自动把更新后的数据复制过去（如下图所示）
 
 # 第十一章
 
 ## 第一节：并发控制概述
 
-1.事务串行执行
+1.不同的多事务执行方式：
 
-​	每个时刻只有一个事务运行，其他事务必须等到这个事务结束后方能运行。
+​	1.事务串行执行：**每个时刻只有一个事务运行**，其他事务必须等到这个事务结束后方能运行。
 
-2.交叉并发方式：
+​	2.交叉并发方式：并行事务的并行轮流交叉运行
 
-​	并行事务的并行轮流交叉运行
-
-3.同时并发方式：
-
-​	多处理机系统中，每个处理机可以运行一个事务，多个处理机可以同时运行多个事务，实现多个事务真正的并行运行
+​	3.同时并发方式：多处理机系统中，每个处理机可以运行一个事务，多个处理机可以同时运行多个事务，实现多个事务真正的并行运行
 
 **4.并发操作带来是数据不一致性：**
 
@@ -866,6 +960,8 @@ end
 ​	***后两种情况有时也被成为幻影现象***
 
 ​	**读“脏”数据**：事务T1修改某一数据，并将其写回磁盘，事务T2读取同一数据后，T1由于某种原因被撤销，这时T1已修改过的数据恢复原值，T2读到的数据就与数据库中的数据不一致，T2读到的数据就为“脏”数据，即不正确的数据 
+
+5.数据不一致性：由于并发操作破坏了事务的隔离性
 
 ## 第二节：封锁
 
