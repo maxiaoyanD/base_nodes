@@ -589,7 +589,7 @@ var obj = {
         foo();
     }
 }
-obj.test();
+obj.test();//45
 
 //3-通过call()和aplly()间接调用
     //(this为函数对象的call/apply方法的首个参数，移花接木)
@@ -738,7 +738,7 @@ function Person(username,age){
     console.log(person.__proto__ == Person.prototype);
     //判断能否在person的原型链上找到Object构造函数的prototype
 /**********
-console.log(person.__proto__ == Object.prototype);
+	console.log(person.__proto__ == Object.prototype);//false
 	person.__proto__ == Person.prototype //true
     person.__proto__.__proto__ == Person.prototype.__proto__ //true
     Person.prototype.__proto__ == Object.prototype//true
@@ -752,7 +752,7 @@ console.log(person.__proto__ == Object.prototype);
 ​	length（传入的行参的个数）、argument（传入的实参的个数）
 
 ```javascript
-caller：如果一个函数`f`是在全局作用域内被调用的,则`f.caller为``null`,相反,如果一个函数是在另外一个函数作用域内被调用的,则`f.caller指向调用它的那个函数.`
+//caller：如果一个函数`f`是在全局作用域内被调用的,则`f.caller为``null`,相反,如果一个函数是在另外一个函数作用域内被调用的,则`f.caller指向调用它的那个函数.`
 function fn2(){
         console.log(fn2.caller);//返回fn3()函数
     }
@@ -837,7 +837,7 @@ valueOf()方法返回指定对象的原始值。
     obj.f3 = f1;
     obj.f4 = f1();//f4赋值的是f1()执行的结果及f2函数
     obj.f3();
-    obj.f4();//f4()执行的结果就是f2()执行的结果
+    obj.f4();//f4()执行的结果就是f2()执行的结果30
 
     //函数多层嵌套，this没有穿透
 ```
@@ -937,7 +937,7 @@ AA();						//AA(); //AA_2
 - 在函数外不能直接访问函数的局部变量，但可以通过闭包来访问
 - 函数内访问同名变量时，局部变量会覆盖全局变量
   •ES5中无块作用域
-  - 全局作用域、函数作用域、ES5中可以使用函数立即执行表达式来模拟块作用域
+  - 全局作用域、函数作用域、**ES5中可以使用函数立即执行表达式来模拟块作用域**
 
 # 10、JS作用域及执行上下文
 
@@ -1640,14 +1640,15 @@ console.log(obj.hasOwnProperty("z"));//false
 obj.z = 5;
 
 console.log(obj.hasOwnProperty("z"));
-console.log(obj.z);
-console.log(proObj.z);
+console.log(obj.z);//5
+console.log(proObj.z);//3
 
 obj.z = 8;
-console.log(obj.z);
+console.log(obj.z);//8
+console.log(proObj.z)//3
 
 delete obj.z;//true
-console.log(obj.z);
+console.log(obj.z);//3
 
 delete obj.z;//true
 console.log(obj.z);//still 3
@@ -1762,7 +1763,7 @@ var point = {
         function moveToX() {
             this.x = x;//this绑定到了哪里？
         }
-        //内部嵌套函数
+        //.....................
         function moveToY() {
             this.y = y;//this绑定到了哪里？
         }
@@ -1820,13 +1821,14 @@ var point = {
     moveTo:function (x,y) {
         //内部嵌套函数
         function moveToX() {
-            this.x = x;//this绑定到了哪里？
+            this.x = x;//this绑定到了哪里？绑定到了Windows上
         }
         //内部嵌套函数
         function moveToY() {
             this.y = y;//this绑定到了哪里？
         }
         moveToX();//moveToX.call(this);通过间接调用来解决
+        //这里的this是moveTo中的this
         moveToY();
     }
 };
@@ -1980,7 +1982,7 @@ console.log(s2.age);
       this.id = id;
   }
   Student.prototype = Object.create(Person.prototype);
-  // console.log(Person.prototype.constructor); //
+  // console.log(Person.prototype.constructor); //Person
   // console.log(Student.prototype.constructor); //
   Student.prototype.constructor = Student;
   var s1 = new Student("xxx",22,2017001);

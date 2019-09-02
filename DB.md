@@ -335,7 +335,7 @@ values('201215128','陈冬','18','男','IS')
         select sdept,avg(sage)
         from student
         group by sdept
---************************数据修改*******************************
+--************************数据修改******************************
 --set语句：指定要修改方式、要修改的列、修改后取值
 --where子句：指定要修改元组，缺省表示要修改表中的所有元组
 --将学生201215121的年龄改为22岁。
@@ -354,7 +354,7 @@ where 'CS' =(
     from student
     where student.sno = sc.sno
 )
---********************数据删除***********************************
+--********************数据删除********************************
 --删除学号为201215128的学生纪录
 delete from  student
 where sno='201215128'
@@ -567,7 +567,7 @@ open num_cursor
 --first：返回游标中的首个记录
 --last：返回游标中的最后一个记录
 --absolute：是绝对位置，他将指针移到第n行位置
---relative：如果n是正数则为当前位置之后的第n歌位置，为负则为当前位置向前            的第n个位置
+--relative：如果n是正数则为当前位置之后的第n个位置，为负则为当前位置向前            的第n个位置
 --into：允许将使用fetch语句读取的数据存放在若干个局部变量中，在变量行中的         每个变量必须与游标结果集中相应的列相对应。
 --执行fetch语句后，可通过@@fetch_status全局变量返回游标当前的状态。
 --@@fetch_status =0 ：fetch语句执行成功
@@ -578,9 +578,9 @@ set @num=0
 fetch next from num_cursor into @sno
 while @@fetch_status=0
 begin
-	if not exists(select * from student where sno=@sno)
+	if not exists(select * from sc where sno=@sno)
        set @num = @num+1
-    fetch next from  num_fetch into @sno
+        fetch next from  num_fetch into @sno
 end
 select @num
 --4、关闭游标
@@ -631,7 +631,7 @@ create proc num
 as
 select *
 from student
-where son in(
+where sno in(
 	select sno
     from sc
     where grade<60
@@ -654,7 +654,7 @@ exec proc_insert_student('')
 --查询指定学号学生的平均成绩，并将成绩返回
 create proc mygrade
 @sno varchar(10),
-@grade int out  -- *********************************设置输出型参数
+@grade int out  -- *******************************设置输出型参数
 as
 begin 
 	select grade
@@ -755,13 +755,15 @@ from fun1()
 
 ```sql
 --1、insert触发器
+--建立一个触发器，当向sc表中添加数据时，如果添加的数据与student表中的数据不匹配（没有对应的学号），则将此数据删除
+
 create trigger tr_sc_grade
 on sc
-after inster
+after insert
 as
 begin
 	declare @score smallint
-	select rroe@score=grade from inserted
+	select @score=grade from inserted
 	if(@score>100 or @score<0)
 		begin
 			raiserror('成绩必须在0和100之间',10,1)
@@ -810,7 +812,7 @@ end
 --1、
 create function funbook(@类别名 char(9))
 returns table
-as
+as  
 	return 
 		select 图书.* 
 		from 图书,图书类别
